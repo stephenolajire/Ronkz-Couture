@@ -11,7 +11,7 @@ const Filter: React.FC = () => {
     ];
 
     const [searchTerm, setSearchTerm] = React.useState("");
-    const [selectedCategory, setSelectedCategory] = React.useState("");
+    // const [selectedCategory, setSelectedCategory] = React.useState("");
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
@@ -35,7 +35,7 @@ const Filter: React.FC = () => {
           <option value="">All Categories</option>
           {categoryLists.map((category) => (
             <option
-              onClick={() => setSelectedCategory(category.name)}
+            //   onClick={() => setSelectedCategory(category.name)}
               key={category.id}
               value={category.name}
             >
