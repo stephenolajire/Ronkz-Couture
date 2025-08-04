@@ -14,13 +14,13 @@ const Hero: React.FC = () => {
       }}
     >
       <div className="absolute inset-0"></div>
-      <div className="h-full md:w-[60%] w-full flex flex-col justify-center gap-4 sm:gap-5 md:gap-6 px-4 sm:px-10 md:px-30 lg:px-50">
+      <div className="h-full md:w-[60%] w-full flex flex-col justify-center gap-4 sm:gap-5 md:gap-6 px-4 sm:px-5 md:px-15 lg:px-25">
         <div className="p-2 bg-red-200 border-1 border-red-500 rounded-full flex space-x-2 w-fit">
           <Star className="mr-2 text-yellow-500" />
           <p className="text-base md:text-lg">Premium Nigeria Fashion</p>
         </div>
         <div className="">
-          <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold text-white">
+          <h1 className="text-3xl md:text-5xl lg:text-7xl text-white">
             Elegant <br />{" "}
             <span className="text-yellow-500">African Fashion</span>
           </h1>

@@ -28,11 +28,11 @@ const Footer: React.FC = () => {
     },
   ];
   return (
-    <div className="bg-black/85 text-gray-100 py-15 md:py-20 lg:py-25 px-4 sm:px-10 md:px-30 lg:px-50">
+    <div className="bg-black/85 text-gray-100 py-15 md:py-20 lg:py-25 px-4 sm:px-5 md:px-15 lg:px-25">
       <div className="flex flex-col md:flex-row justify-between items-start space-y-8 md:space-y-0">
         <div>
           <h1 className="text-3xl md:text-4xl font-bold text-yellow-500 ">
-            RonkzCouture
+            Ronks Couture
           </h1>
           <p className="mt-4 text-gray-100 text-lg md:text-xl">
             Celebrating the modern African <br /> woman through exquisite

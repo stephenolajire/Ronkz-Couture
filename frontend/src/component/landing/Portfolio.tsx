@@ -45,15 +45,15 @@ const Portfolio: React.FC = () => {
   ];
 
   return (
-    <div className="h-auto py-15 md:py-20 lg:py-25 bg-gray-100 px-4 sm:px-10 md:px-30 lg:px-50">
-      <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-gray-900 text-center">
+    <div className="h-auto py-15 md:py-20 lg:py-25 bg-gray-100 px-4 sm:px-5 md:px-15 lg:px-25">
+      <h1 className="text-2xl md:text-4xl lg:text-6xl  text-gray-900 text-center">
         Our <span className="text-yellow-500">Portfolio</span>
       </h1>
       <p className="mt-4 text-lg md:text-2xl text-gray-500 text-center">
         Discover our stunning collection of bespoke designs that blend
         traditional <br /> African elegance with contemporary fashion trends.
       </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-10">
         {portfolioItems.map((item) => (
           <div
             onMouseEnter={() => setHoveredTitle(item.title)}

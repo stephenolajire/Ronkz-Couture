@@ -1,8 +1,8 @@
 import React from 'react'
-import Hero from '../../component/user/Hero'
-import Portfolio from '../../component/user/Portfolio'
-import Testimonial from '../../component/user/Testimonial'
-import NewsLetter from '../../component/user/NewsLetter'
+import Hero from '../../component/landing/Hero'
+import Portfolio from '../../component/landing/Portfolio'
+import Testimonial from '../../component/landing/Testimonial'
+import NewsLetter from '../../component/landing/NewsLetter'
 
 const Home: React.FC = () => {
   return (

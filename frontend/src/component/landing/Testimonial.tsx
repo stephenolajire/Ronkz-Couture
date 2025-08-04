@@ -40,8 +40,8 @@ const Testimonial: React.FC = () => {
     },
   ];
   return (
-    <div className="h-auto py-15 md:py-20 lg:py-25 bg-red-100 px-4 sm:px-10 md:px-30 lg:px-50">
-      <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-gray-900 text-center">
+    <div className="h-auto py-15 md:py-20 lg:py-25 bg-red-100 px-4 sm:px-5 md:px-15 lg:px-25">
+      <h1 className="text-2xl md:text-4xl lg:text-6xl text-gray-900 text-center">
         What Our <span className="text-yellow-500">Clients Say</span>
       </h1>
       <p className="mt-4 text-lg md:text-2xl text-gray-500 text-center">
@@ -76,9 +76,10 @@ const Testimonial: React.FC = () => {
                 <h3 className="text-xl font-semibold">{testimonial.name}</h3>
                 <p className="text-gray-500">{testimonial.role}</p>
               </div>
-                <p className="text-gray-400 text-base mt-1">
-                    {testimonial.location} - {new Date(testimonial.date).toLocaleDateString()}  
-                </p>
+              <p className="text-gray-400 text-base mt-1">
+                {testimonial.location} -{" "}
+                {new Date(testimonial.date).toLocaleDateString()}
+              </p>
             </div>
           </div>
         ))}

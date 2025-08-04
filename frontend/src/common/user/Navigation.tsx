@@ -14,30 +14,27 @@ const Navigation: React.FC = () => {
       name: "Home",
       href: "/",
     },
+
     {
-      name: "About",
-      href: "/about",
+      name: "Shop",
+      href: "/shop",
     },
     {
       name: "Contact",
       href: "/contact",
     },
-    {
-      name: "Shop",
-      href: "/shop",
-    },
   ];
   return (
-    <header className="h-auto background shadow-md flex justify-between items-center sm:px-10 md:px-30 md:py-4 lg:px-50 lg:py-4 p-4  sticky top-0 z-50">
+    <header className="h-auto background shadow-md flex justify-between items-center px-4 sm:px-5 md:px-15 lg:px-25 lg:py-4 p-4  sticky top-0 z-50">
       <div className="flex items-center space-x-4">
         <h3 className="text-3xl md:text-4xl font-bold text-yellow-500 h-auto items-center">
-          Ronkz Couture
+          Ronks Couture
         </h3>
       </div>
       <div>
         {/* Desktop navigation  */}
         <nav className="space-x-4 flex items-center">
-          <ul className="space-x-5 hidden md:flex">
+          <ul className="space-x-8 hidden md:flex">
             {Links.map((link, index) => (
               <li
                 key={index}
