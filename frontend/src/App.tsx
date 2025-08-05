@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import UserLayout from './layout/UserLayout'
 import Home from './pages/user/Home'
 import Shop from './pages/user/Shop'
+import Login from './auth/Login'
+import SignUp from './auth/SignUp'
 
 const App:React.FC = () => {
   return (
@@ -12,9 +14,12 @@ const App:React.FC = () => {
           <Route index element={<Home />} />
           <Route path="shop" element={<Shop />} />
         </Route>
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </Router>
-  )
+  );
 }
 
 export default App

@@ -27,9 +27,14 @@ const Navigation: React.FC = () => {
   return (
     <header className="h-auto background shadow-md flex justify-between items-center px-4 sm:px-5 md:px-15 lg:px-25 lg:py-4 p-4  sticky top-0 z-50">
       <div className="flex items-center space-x-4">
-        <h3 className="text-3xl md:text-4xl font-bold text-yellow-500 h-auto items-center">
+        {/* <h3 className="text-3xl md:text-4xl font-bold text-yellow-500 h-auto items-center">
           Ronks Couture
-        </h3>
+        </h3> */}
+        <img
+          src="/ronks.png"
+          alt="logo"
+          className="object-cover h-15 w-25 md:w-45 md:h-20"
+        />
       </div>
       <div>
         {/* Desktop navigation  */}
@@ -105,6 +110,28 @@ const Navigation: React.FC = () => {
               </NavLink>
             </li>
           ))}
+          <li className="hover:text-yellow-500 text-lg capitalize text-right pr-4">
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "text-yellow-500" : "text-gray-900"
+              }
+              to="/login"
+              onClick={() => setIsOpen(false)}
+            >
+              Login
+            </NavLink>
+          </li>
+          <li className="hover:text-yellow-500 text-lg capitalize text-right pr-4">
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "text-yellow-500" : "text-gray-900"
+              }
+              to="/signup"
+              onClick={() => setIsOpen(false)}
+            >
+              Signup
+            </NavLink>
+          </li>
         </ul>
       </div>
     </header>
