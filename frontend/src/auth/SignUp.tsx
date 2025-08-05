@@ -240,15 +240,15 @@ const SignUp: React.FC = () => {
               isLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {isLoading ? "Signing in..." : "Sign In"}
+            {isLoading ? "Signing up..." : "Sign Up"}
           </button>
 
           <p className="text-center text-gray-700">
-            Dont have an account yet? click{" "}
-            <Link to="/signup" className="text-yellow-500">
+            Already have an account? click{" "}
+            <Link to="/login" className="text-yellow-500">
               here
             </Link>{" "}
-            to signup
+            to login
           </p>
         </form>
 
