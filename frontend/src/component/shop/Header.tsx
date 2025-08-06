@@ -1,7 +1,14 @@
 import { ArrowBigLeft } from "lucide-react";
 import React from "react";
 
-const ShopHeader: React.FC = () => {
+interface HeaderProp {
+  header: string;
+  headerTwo: string;
+  text: string;
+  textTwo: string;
+}
+
+const Header: React.FC <HeaderProp> = ({header, headerTwo, text, textTwo}) => {
   return (
     <div className="py-5 md:py-10 lg:py-15 flex flex-col md:flex-row justify-between ">
       <div className="mb-3 md:mt-3 md:mb-0">
@@ -17,11 +24,10 @@ const ShopHeader: React.FC = () => {
       </div>
       <div>
         <h1 className="text-2xl md:text-4xl lg:text-6xl text-gray-900 text-center">
-          Ready-to-Wear <span className="text-yellow-500">Collection</span>
+          {header} <span className="text-yellow-500">{headerTwo}</span>
         </h1>
         <p className="mt-4 text-lg md:text-2xl text-gray-500 text-center">
-          Shop our curated collection of stunning ready-to-wear pieces, crafted
-          with the <br /> finest fabrics and impeccable attention to detail.
+          {text} <br /> {textTwo}
         </p>
       </div>
       <div></div>
@@ -29,4 +35,4 @@ const ShopHeader: React.FC = () => {
   );
 };
 
-export default ShopHeader;
+export default Header;

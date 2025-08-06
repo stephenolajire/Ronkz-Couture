@@ -157,10 +157,27 @@ export interface Product {
   badge?: string;
   category: string;
   subcategory: string;
-  description:string;
+  description: string;
 }
 
 export interface ProductList {
   products: Product[];
 }
+
+export const productDetails = {
+  id: 1,
+  name: "Elegant Ankara Midi Dress",
+  price: 45000,
+  originalPrice: 55000,
+  image: "/ronkz.jpg",
+  rating: 4.9,
+  reviews: 24,
+  sizes: ["S", "M", "L", "XL"],
+  colors: ["Blue", "Red", "Green"],
+  badge: "Best Seller",
+  category: "Dresses",
+  subcategory: "Ankara Gown",
+  description: "A beautiful Ankara midi dress perfect for any occasion.",
+};
+
 
