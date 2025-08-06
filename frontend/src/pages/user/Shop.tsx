@@ -15,7 +15,7 @@ const Shop: React.FC = () => {
           with the"
         textTwo="finest fabrics and impeccable attention to detail."
       />
-      <Filter />
+      <Filter products={products}/>
       <div className="pb-5 md:pb-10 lg:pb-15 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {products.map((product: Product) => (
           <ShopCard key={product.id} product={product} />
