@@ -11,7 +11,7 @@ interface HeaderProp {
 const Header: React.FC <HeaderProp> = ({header, headerTwo, text, textTwo}) => {
   return (
     <div className="py-5 md:py-10 lg:py-15 flex flex-col md:flex-row justify-between ">
-      <div className="mb-3 md:mt-3 md:mb-0">
+      <div className="mb-3 md:mt-3 md:mb-0 hidden">
         <button
           onClick={() => window.history.back()}
           className="bg-yellow-500 text-white px-5 py-2 rounded-md flex items-center space-x-3 hover:bg-yellow-600 transition duration-300"

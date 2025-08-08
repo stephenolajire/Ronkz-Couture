@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { href, NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
 const Navigation: React.FC = () => {
@@ -14,10 +14,17 @@ const Navigation: React.FC = () => {
       name: "Home",
       href: "/",
     },
-
+    {
+      name: "About",
+      href:"/about"
+    },
     {
       name: "Shop",
       href: "/shop",
+    },
+    {
+      name: "Custom Order",
+      href: "/custom-order"
     },
     {
       name: "Contact",
