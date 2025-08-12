@@ -10,7 +10,7 @@ interface HeaderProp {
 
 const Header: React.FC <HeaderProp> = ({header, headerTwo, text, textTwo}) => {
   return (
-    <div className="py-5 md:py-10 lg:py-15 flex flex-col md:flex-row justify-between ">
+    <div className="py-5 md:py-10 lg:py-15 flex flex-col md:flex-row justify-between md:items-center md:justify-center">
       <div className="mb-3 md:mt-3 md:mb-0 hidden">
         <button
           onClick={() => window.history.back()}

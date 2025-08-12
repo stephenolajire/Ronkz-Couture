@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '../../component/shop/Header'
 import { BsExclamation } from 'react-icons/bs';
 import Rating from '../../component/shop/Rating';
+import BuyCustomConfirmation from '../../component/shop/BuyCustomConfirmation';
 
 const ProductDetails:React.FC = () => {
+  const [openConfirmation, setOpenConfirmation] = useState<boolean>(false)
+
+  const toggleConfirmation = () => {
+    setOpenConfirmation(!openConfirmation)
+  }
   return (
     <div className="px-4 sm:px-5 md:px-15 lg:px-25">
       <div className="md:-mt-11">
@@ -80,13 +86,13 @@ const ProductDetails:React.FC = () => {
           </div>
           <div className="flex justify-between items-center w-full">
             <div className='w-[45%]'>
-              <button className="bg-yellow-500 p-3 w-full text-center text-gray-50">
+              <button className="bg-yellow-500 p-3 w-full text-center text-gray-50 rounded-xl">
                 Add to Cart
               </button>
             </div>
 
             <div className='w-[45%]'>
-              <button className="bg-gray-500 p-3 w-full text-center text-gray-50">
+              <button onClick={toggleConfirmation} className="bg-gray-500 p-3 w-full text-center text-gray-50 rounded-xl">
                 Custom Order
               </button>
             </div>
@@ -96,6 +102,10 @@ const ProductDetails:React.FC = () => {
       <div>
         <Rating/>
       </div>
+
+      {openConfirmation && (
+        <BuyCustomConfirmation close={toggleConfirmation}/>
+      )}
     </div>
   );
 }

@@ -221,6 +221,49 @@ const CustomOrder: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            <div className="border border-gray-200 rounded-xl p-5 mb-5">
+              <h3 className="text-gray-900 text-2xl md:text-3xl md:my-5 mt-0 my-3">
+                Style Image
+              </h3>
+              <p className="text-gray-500 my-3">
+                Please provide the image of the style you want to sew
+              </p>
+              <div className="grid grid-cols-1 gap-5">
+                <div>
+                  <label htmlFor="image" className="text-gray-500">
+                    Image
+                  </label>
+                  <input
+                    type="file"
+                    placeholder="provide the style image"
+                    className="w-full border h-30 border-gray-200 border-dashed flex items-center justify-center px-2 py-10 outline-yellow-500 rounded-lg mt-1"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="border border-gray-200 rounded-xl p-5 mb-5">
+              <h3 className="text-gray-900 text-2xl md:text-3xl md:my-5 mt-0 my-3">
+                Personal Image
+              </h3>
+              <p className="text-gray-500 my-3">
+                Please provide your full picture for reference
+              </p>
+              <div className="grid grid-cols-1 gap-5">
+                <div>
+                  <label htmlFor="chest" className="text-gray-500">
+                    Picture
+                  </label>
+                  <input
+                    type="file"
+                    placeholder="provide the style image"
+                    className="w-full border border-gray-200 border-dashed flex items-center justify-center px-2 py-10 outline-yellow-500 rounded-lg mt-1"
+                  />
+                </div>
+              </div>
+            </div>
+            <button className="bg-yellow-500 p-3 text-center w-full rounded-xl text-lg md:text-xl text-white">Submit</button>
           </form>
         </div>
       </div>
