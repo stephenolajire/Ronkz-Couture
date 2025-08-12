@@ -37,7 +37,7 @@ const ProductDetails:React.FC = () => {
           <div>
             <h4 className="text-2xl md:text-4xl font-medium">₦ 20,000</h4>
           </div>
-          <div className="flex flex-row space-x-3 items-center w-full background shadow shadow-gray-200 p-2 rounded-full">
+          <div className="flex flex-row md:space-x-4 sm:space-x-3 space-x-2 items-center w-full background shadow shadow-gray-200 p-2 rounded-full">
             <span>
               <BsExclamation size={20} className="text-gray-500 " />
             </span>
