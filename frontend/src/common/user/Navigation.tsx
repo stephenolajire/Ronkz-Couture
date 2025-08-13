@@ -1,6 +1,6 @@
 import React from "react";
 import {NavLink } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, ShoppingCart, X } from "lucide-react";
 
 const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -14,10 +14,10 @@ const Navigation: React.FC = () => {
       name: "Home",
       href: "/",
     },
-    {
-      name: "About",
-      href:"/about"
-    },
+    // {
+    //   name: "About",
+    //   href:"/about"
+    // },
     {
       name: "Shop",
       href: "/shop",
@@ -45,7 +45,7 @@ const Navigation: React.FC = () => {
       </div>
       <div>
         {/* Desktop navigation  */}
-        <nav className="space-x-4 flex items-center">
+        <nav className="space-x-4 flex items-center justify-between">
           <ul className="space-x-8 hidden md:flex">
             {Links.map((link, index) => (
               <li
@@ -63,16 +63,30 @@ const Navigation: React.FC = () => {
               </li>
             ))}
           </ul>
-
-          <div className="flex md:hidden">
-            {isOpen ? (
-              <X className="cursor-pointer" onClick={toggleMenu} />
-            ) : (
-              <Menu className="cursor-pointer" onClick={toggleMenu} />
-            )}
-          </div>
         </nav>
       </div>
+
+      <div className="flex space-x-6 items-center ">
+        <div className="relative">
+          <div className="bg-yellow-500 text-white absolute h-4 w-4 text-center rounded-full text-sm flex items-center justify-center font-bold right-0 -top-1">3</div>
+          <ShoppingCart className="text-base md:text-2xl text-gray-900 h-7" />
+        </div>
+
+        <div className="flex md:hidden">
+          {isOpen ? (
+            <X
+              className="cursor-pointer text-base md:text-2xl h-10"
+              onClick={toggleMenu}
+            />
+          ) : (
+            <Menu
+              className="cursor-pointer text-base md:text-2xl h-10"
+              onClick={toggleMenu}
+            />
+          )}
+        </div>
+      </div>
+
       <div className="hidden md:flex items-center">
         <button>
           <NavLink
@@ -94,7 +108,7 @@ const Navigation: React.FC = () => {
 
       {/* Mobile navigation */}
       <div
-        className={`fixed top-16 right-0 w-full bg-white shadow-lg p-4 md:hidden h-[calc(100vh-4rem)] transition-all duration-1000 ease-in-out ${
+        className={`fixed top-22 right-0 w-full bg-white shadow-lg p-4 md:hidden h-[calc(100vh-4rem)] transition-all duration-1000 ease-in-out ${
           isOpen
             ? "opacity-100 translate-y-0 "
             : "opacity-0 -translate-y-full pointer-events-none"

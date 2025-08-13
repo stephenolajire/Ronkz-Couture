@@ -237,7 +237,7 @@ const CustomOrder: React.FC = () => {
                   <input
                     type="file"
                     placeholder="provide the style image"
-                    className="w-full border h-30 border-gray-200 border-dashed flex items-center justify-center px-2 py-10 outline-yellow-500 rounded-lg mt-1"
+                    className="w-full border h-30 border-gray-300 border-dashed flex items-center justify-center px-2 py-10 outline-yellow-500 rounded-lg mt-1"
                   />
                 </div>
               </div>
@@ -258,12 +258,14 @@ const CustomOrder: React.FC = () => {
                   <input
                     type="file"
                     placeholder="provide the style image"
-                    className="w-full border border-gray-200 border-dashed flex items-center justify-center px-2 py-10 outline-yellow-500 rounded-lg mt-1"
+                    className="w-full border border-gray-300 border-dashed flex items-center justify-center px-2 py-10 outline-yellow-500 rounded-lg mt-1"
                   />
                 </div>
               </div>
             </div>
-            <button className="bg-yellow-500 p-3 text-center w-full rounded-xl text-lg md:text-xl text-white">Submit</button>
+            <button className="bg-yellow-500 p-3 text-center w-full rounded-xl text-lg md:text-xl text-white">
+              Submit
+            </button>
           </form>
         </div>
       </div>
