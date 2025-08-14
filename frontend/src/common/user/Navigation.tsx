@@ -1,5 +1,5 @@
 import React from "react";
-import {NavLink } from "react-router-dom";
+import {Link, NavLink } from "react-router-dom";
 import { Menu, ShoppingCart, X } from "lucide-react";
 
 const Navigation: React.FC = () => {
@@ -67,10 +67,14 @@ const Navigation: React.FC = () => {
       </div>
 
       <div className="flex space-x-6 items-center ">
-        <div className="relative">
-          <div className="bg-yellow-500 text-white absolute h-4 w-4 text-center rounded-full text-sm flex items-center justify-center font-bold right-0 -top-1">3</div>
-          <ShoppingCart className="text-base md:text-2xl text-gray-900 h-7" />
-        </div>
+        <Link to='/cartpage'>
+          <div className="relative">
+            <div className="bg-yellow-500 text-white absolute h-4 w-4 text-center rounded-full text-sm flex items-center justify-center font-bold right-0 -top-1">
+              3
+            </div>
+            <ShoppingCart className="text-base md:text-2xl text-gray-900 h-7" />
+          </div>
+        </Link>
 
         <div className="flex md:hidden">
           {isOpen ? (

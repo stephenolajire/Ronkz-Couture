@@ -7,6 +7,8 @@ import Login from './auth/Login'
 import SignUp from './auth/SignUp'
 import ProductDetails from './pages/user/ProductDetails'
 import CustomOrder from './pages/user/CustomOrder'
+import CartPage from './pages/user/CartPage'
+import CheckoutPage from './pages/user/Checkout'
 
 const App:React.FC = () => {
   return (
@@ -17,6 +19,8 @@ const App:React.FC = () => {
           <Route path="shop" element={<Shop />} />
           <Route path="product/detail" element={<ProductDetails />} />
           <Route path="custom-order" element={<CustomOrder />} />
+          <Route path="cartpage" element={<CartPage />} />
+          <Route path="checkout" element={<CheckoutPage />} />
         </Route>
 
         <Route path="/login" element={<Login />} />
