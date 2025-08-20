@@ -1,17 +1,47 @@
 import React from "react";
-import Header from "../../component/shop/Header";
+
 
 const CustomOrder: React.FC = () => {
   return (
     <div className="">
-      <div className="bg-yellow-50 px-4 sm:px-5 md:px-15 lg:px-25 ">
-        <Header
-          header="Custom"
-          headerTwo="Design"
-          text="Create a one-of-a-kind piece tailored perfectly to your measurements, style, and"
-          textTwo="vision. Let's bring your dream garment to life."
-        />
+      <div className="relative bg-gradient-to-br from-black via-gray-900 to-black px-4 sm:px-8 md:px-16 lg:px-32 overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-10 w-32 h-32 bg-yellow-500/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-48 h-48 bg-yellow-500/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-px bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent"></div>
+        </div>
+
+        <div className="relative z-10 py-16 md:py-24 lg:py-32 flex flex-col items-center">
+          {/* Main heading with enhanced styling */}
+          <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold text-center leading-tight mb-8">
+            <span className="text-white drop-shadow-2xl">Custom</span>
+            <span className="text-yellow-500 ml-4 drop-shadow-2xl relative">
+              Design
+              <div className="absolute -inset-1 bg-yellow-500/20 blur-xl rounded-lg -z-10"></div>
+            </span>
+          </h1>
+
+          {/* Enhanced description */}
+          <div className="max-w-4xl">
+            <p className="text-lg md:text-xl lg:text-2xl text-gray-300 text-center leading-relaxed font-light">
+              Create a{" "}
+              <span className="text-yellow-400 font-medium relative">
+                one-of-a-kind piece
+                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-yellow-400 to-transparent"></div>
+              </span>{" "}
+              tailored perfectly to your measurements, style, and{" "}
+              <br className="hidden sm:block" />
+              vision. Let's bring your{" "}
+              <span className="text-yellow-400 font-medium relative">
+                dream garment
+                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-yellow-400 to-transparent"></div>
+              </span>{" "}
+              to life.
+            </p>
+          </div>
+        </div>
       </div>
+      
       <div className="w-full flex items-center justify-center my-8 md:my-10 lg:my-15 px-4 md:px-0">
         <div className="w-full md:w-[50%]">
           <form className="w-full h-auto">

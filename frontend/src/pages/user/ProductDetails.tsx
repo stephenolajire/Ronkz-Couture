@@ -41,7 +41,7 @@ const ProductDetails:React.FC = () => {
             <span>
               <BsExclamation size={20} className="text-gray-500 " />
             </span>
-            <p className="text-gray-500 text-base md:text-lg">
+            <p className="text-gray-500 text-sm sm:text-base md:text-lg">
               {" "}
               Order this and get it delivered the next day
             </p>

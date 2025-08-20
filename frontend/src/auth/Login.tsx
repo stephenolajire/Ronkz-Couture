@@ -1,8 +1,6 @@
 import React, { useState, type FormEvent } from "react";
 import { Mail, Lock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaFacebook, FaGoogle } from "react-icons/fa";
-
 
 interface FormData {
   email: string;
@@ -77,12 +75,16 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 w-full flex items-center justify-center py-10">
-      <div className="flex flex-col space-y-5 w-[90%] md:w-[32%] bg-white border border-gray-100 shadow-2xl shadow-gray-100 rounded-xl p-4 md:p-8">
-        <div className="space-y-3">
-          <h3 className="text-yellow-500 text-3xl font-bold text-center">
-            Ronks Couture
-          </h3>
+    <div className="min-h-screen w-full flex items-center justify-center py-10 bg-black">
+      <div className="flex flex-col space-y-5 w-[85%] md:w-[32%] bg-white border border-white rounded-xl p-4 md:p-8">
+        <div className="space-y-3 w-full flex justify-center items-center flex-col">
+          <div className="flex items-center space-x-4">
+            <img
+              src="/logo.png"
+              alt="logo"
+              className="object-cover h-15 w-15 md:h-20 md:w-20 rounded-full"
+            />
+          </div>
           <h5 className="text-gray-900 text-xl text-center font-bold">
             Welcome Back
           </h5>
@@ -175,26 +177,13 @@ const Login: React.FC = () => {
           </button>
 
           <p className="text-center text-gray-700">
-            Dont have an account yet? click <Link to="/signup" className="text-yellow-500">here</Link> to signup
+            Dont have an account yet? click{" "}
+            <Link to="/register" className="text-yellow-500">
+              here
+            </Link>{" "}
+            to signup
           </p>
         </form>
-
-        <hr className="pt-5 text-gray-200 w-full" />
-        <div className="flex justify-between -mt-4">
-          <button className="flex space-x-3 w-[45%] background border border-yellow-200 px-3 py-2 rounded-2xl text-yellow-500 items-center justify-center">
-            <span>
-              <FaGoogle />
-            </span>
-            <span>Google</span>
-          </button>
-
-          <button className="flex space-x-3 w-[45%] background border border-yellow-200 px-3 py-2 rounded-2xl text-yellow-500 items-center justify-center">
-            <span>
-              <FaFacebook />
-            </span>
-            <span>Facebook</span>
-          </button>
-        </div>
       </div>
     </div>
   );

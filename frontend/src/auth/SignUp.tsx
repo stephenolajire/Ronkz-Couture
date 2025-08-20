@@ -1,8 +1,6 @@
 import React, { useState, type FormEvent } from "react";
 import { Mail, Lock, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaFacebook, FaGoogle } from "react-icons/fa";
-
 
 interface FormData {
   email: string;
@@ -21,7 +19,7 @@ const SignUp: React.FC = () => {
     email: "",
     password: "",
     remember: false,
-    cpassword: ""
+    cpassword: "",
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -42,11 +40,11 @@ const SignUp: React.FC = () => {
     const newErrors: Partial<FormData> = {};
 
     if (!formData.firstName || !formData.lastName) {
-        newErrors.firstName = "First name cannot be empty"
-        newErrors.lastName = "Last name cannot be empty"
+      newErrors.firstName = "First name cannot be empty";
+      newErrors.lastName = "Last name cannot be empty";
     } else if (formData.firstName.length < 2 || formData.lastName.length < 2) {
-        newErrors.firstName = "First name must contain atlease 3 letters"
-        newErrors.lastName = "Last name must contain atlease 3 letters";
+      newErrors.firstName = "First name must contain atlease 3 letters";
+      newErrors.lastName = "Last name must contain atlease 3 letters";
     }
 
     if (!formData.email) {
@@ -62,7 +60,7 @@ const SignUp: React.FC = () => {
     }
 
     if (formData.password !== formData.cpassword) {
-        newErrors.cpassword = "Password do not match"
+      newErrors.cpassword = "Password do not match";
     }
 
     setErrors(newErrors);
@@ -95,12 +93,16 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 w-full flex items-center justify-center py-10">
-      <div className="flex flex-col space-y-5 w-[90%] md:w-[32%] bg-white border border-gray-100 shadow-2xl shadow-gray-100 rounded-xl p-4 md:p-8">
-        <div className="space-y-3">
-          <h3 className="text-yellow-500 text-3xl font-bold text-center">
-            Ronks Couture
-          </h3>
+    <div className="min-h-screen bg-black w-full flex items-center justify-center py-10">
+      <div className="flex flex-col space-y-5 w-[85%] md:w-[32%] bg-white rounded-2xl p-4 md:p-8">
+        <div className="space-y-3 flex flex-col items-center justify-center">
+          <div className="flex items-center space-x-4">
+            <img
+              src="/logo.png"
+              alt="logo"
+              className="object-cover h-15 w-15 md:h-20 md:w-20 rounded-full"
+            />
+          </div>
           <h5 className="text-gray-900 text-xl text-center font-bold">
             Create Account
           </h5>
@@ -251,23 +253,6 @@ const SignUp: React.FC = () => {
             to login
           </p>
         </form>
-
-        <hr className="pt-5 text-gray-200 w-full" />
-        <div className="flex justify-between -mt-4">
-          <button className="flex space-x-3 w-[45%] background border border-yellow-200 px-3 py-2 rounded-2xl text-yellow-500 items-center justify-center">
-            <span>
-              <FaGoogle />
-            </span>
-            <span>Google</span>
-          </button>
-
-          <button className="flex space-x-3 w-[45%] background border border-yellow-200 px-3 py-2 rounded-2xl text-yellow-500 items-center justify-center">
-            <span>
-              <FaFacebook />
-            </span>
-            <span>Facebook</span>
-          </button>
-        </div>
       </div>
     </div>
   );

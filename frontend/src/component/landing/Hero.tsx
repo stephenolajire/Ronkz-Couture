@@ -1,92 +1,139 @@
-import { Star } from "lucide-react";
+import { Star, Scissors, Heart, Award } from "lucide-react";
 import React from "react";
-import { Link } from "react-router-dom";
 
 const Hero: React.FC = () => {
   return (
-    <div
-      className="relative h-screen"
-      style={{
-        backgroundImage: "url('/ronkz.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      <div className="absolute inset-0"></div>
-      <div className="h-full md:w-[60%] w-full flex flex-col justify-center gap-4 sm:gap-5 md:gap-6 px-4 sm:px-5 md:px-15 lg:px-25">
-        <div className="p-2 bg-red-200 border-1 border-red-500 rounded-full flex space-x-2 w-fit">
-          <Star className="mr-2 text-yellow-500" />
-          <p className="text-base md:text-lg">Premium Nigeria Fashion</p>
-        </div>
-        <div className="">
-          <h1 className="text-3xl md:text-5xl lg:text-7xl text-white">
-            Elegant <br />{" "}
-            <span className="text-yellow-500">African Fashion</span>
-          </h1>
-        </div>
-        <div className="">
-          <p className="text-lg md:text-2xl text-white font-medium">
-            Discover the latest trends in African fashion and elevate your style
-            with our premium collections. Shop now and embrace the elegance of
-            African couture.
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Content Overlay */}
+      <div className="relative z-10 h-full min-h-screen flex bg-black">
+        {/* Left Content */}
+        <div className="w-full lg:w-3/5 flex flex-col justify-center gap-6 px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20 py-20">
+          {/* Premium Badge */}
+          <div className="inline-flex items-center bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-full w-fit shadow-lg">
+            <Award className="w-5 h-5 mr-3" />
+            <span className="font-semibold text-sm md:text-base">
+              Award-Winning Fashion Designer
+            </span>
+          </div>
+
+          {/* Main Heading */}
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
+              Crafting
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">
+                Couture Dreams
+              </span>
+            </h1>
+            <div className="flex items-center gap-3 text-yellow-400">
+              <Scissors className="w-6 h-6" />
+              <span className="text-lg md:text-xl font-medium">
+                From Sketch to Runway
+              </span>
+            </div>
+          </div>
+
+          {/* Description */}
+          <p className="text-lg md:text-xl text-gray-200 font-light max-w-2xl leading-relaxed">
+            Experience the artistry of bespoke African fashion. From the first
+            stitch to the final fitting, watch your vision come to life through
+            masterful craftsmanship and innovative design.
           </p>
-        </div>
-        <div className="flex items-center space-x-2 sm:space-x-4 md:space-x-5 space-y-5 flex-wrap md:space-y-0">
-          <div className="flex items-center space-x-2">
-            <Star className="mr-2 text-yellow-500" />
-            <span className="text-yellow-500 font-bold md:text-xl">
-              Custom Tailoring
-            </span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Star className="mr-2 text-yellow-500" />
-            <span className="text-yellow-500 font-bold md:text-xl">
-              Bridal Couture
-            </span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Star className="mr-2 text-yellow-500" />
-            <span className="text-yellow-500 font-bold md:text-xl">
-              Premium Fabrics
-            </span>
-          </div>
-        </div>
-        <div className="flex items-center justify-between space-x-4 mt-5">
-          <Link to="/shop" className="w-[45%]">
-            <button className="bg-yellow-500 md:text-2xl text-white py-3 md:py-4 px-4 rounded-lg w-full hover:bg-yellow-600 transition-colors">
-              Start Shopping
-            </button>
-          </Link>
 
-          <Link to="/contact" className="w-[45%]">
-            <button className="bg-white border-1 border-yellow-500 md:text-2xl text-yellow-500 py-3 md:py-4 px-4 rounded-lg w-full hover:bg-yellow-600 transition-colors">
-              Contact Us
-            </button>
-          </Link>
-        </div>
-        <hr className="border-t border-gray-200 my-5" />
+          {/* Feature Highlights */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
+            <div className="flex items-center gap-3 bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4">
+              <Scissors className="w-6 h-6 text-yellow-400" />
+              <span className="text-yellow-500 font-medium">Custom Tailoring</span>
+            </div>
+            <div className="flex items-center gap-3 bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4">
+              <Heart className="w-6 h-6 text-yellow-400" />
+              <span className="text-yellow-500 font-medium">Bridal Couture</span>
+            </div>
+            <div className="flex items-center gap-3 bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4">
+              <Star className="w-6 h-6 text-yellow-400" />
+              <span className="text-yellow-500 font-medium">Premium Fabrics</span>
+            </div>
+          </div>
 
-        <div className="flex items-center space-x-10 sm:space-x-4 md:space-x-5 space-y-5 md:space-y-0 flex-wrap ">
-          <div className="flex items-center flex-col">
-            <h3 className="text-yellow-500 font-bold md:text-3xl text-2xl">
-              500+
-            </h3>
-            <p className="text-white font-bold md:text-xl">Happy Clients</p>
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 mt-8">
+            <button
+              onClick={() => (window.location.href = "/shop")}
+              className="w-full sm:w-auto bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold text-lg px-8 py-4 rounded-lg hover:from-yellow-500 hover:to-yellow-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
+              View Portfolio
+            </button>
+
+            <button
+              onClick={() => (window.location.href = "/consultation")}
+              className="w-full sm:w-auto bg-transparent border-2 border-white text-white font-semibold text-lg px-8 py-4 rounded-lg hover:bg-white hover:text-black transition-all duration-300"
+            >
+              Book Consultation
+            </button>
           </div>
-          <div className="flex items-center flex-col">
-            <h3 className="text-yellow-500 font-bold md:text-3xl text-2xl">
-              50+
-            </h3>
-            <p className="text-white font-bold md:text-xl">Bridal Designs</p>
+        </div>
+
+        {/* Right Stats Panel */}
+        <div className="hidden lg:flex lg:w-2/5 items-center justify-center">
+          <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl p-8 mx-8 border border-white border-opacity-20">
+            <div className="grid grid-cols-1 gap-8">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-yellow-400 mb-2">
+                  500+
+                </div>
+                <div className="text-white font-medium">Happy Clients</div>
+                <div className="text-gray-300 text-sm mt-1">Worldwide</div>
+              </div>
+
+              <div className="border-t border-white border-opacity-20 pt-6 text-center">
+                <div className="text-4xl font-bold text-yellow-400 mb-2">
+                  150+
+                </div>
+                <div className="text-white font-medium">Bridal Designs</div>
+                <div className="text-gray-300 text-sm mt-1">Custom Made</div>
+              </div>
+
+              <div className="border-t border-white border-opacity-20 pt-6 text-center">
+                <div className="text-4xl font-bold text-yellow-400 mb-2">
+                  8+
+                </div>
+                <div className="text-white font-medium">Years Experience</div>
+                <div className="text-gray-300 text-sm mt-1">
+                  In Fashion Design
+                </div>
+              </div>
+
+              <div className="border-t border-white border-opacity-20 pt-6 text-center">
+                <div className="text-4xl font-bold text-yellow-400 mb-2">
+                  15+
+                </div>
+                <div className="text-white font-medium">Fashion Shows</div>
+                <div className="text-gray-300 text-sm mt-1">Featured In</div>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center flex-col">
-            <h3 className="text-yellow-500 font-bold md:text-3xl text-2xl">
-              5+
-            </h3>
-            <p className="text-white font-bold md:text-xl">
-              Years of Experience
-            </p>
+        </div>
+      </div>
+
+      {/* Mobile Stats */}
+      <div className="lg:hidden relative z-10 bg-black bg-opacity-50 backdrop-blur-sm">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 px-6 py-8">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-yellow-400">500+</div>
+            <div className="text-white text-sm">Happy Clients</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-yellow-400">150+</div>
+            <div className="text-white text-sm">Bridal Designs</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-yellow-400">8+</div>
+            <div className="text-white text-sm">Years Experience</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-yellow-400">15+</div>
+            <div className="text-white text-sm">Fashion Shows</div>
           </div>
         </div>
       </div>

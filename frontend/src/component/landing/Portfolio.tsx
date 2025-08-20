@@ -1,52 +1,59 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import useStore from "../../context/StoreContext";
 
 const Portfolio: React.FC = () => {
   const [hoveredTitle, setHoveredTitle] = useState<string | null>(null);
+  const { usePortfolioItems } = useStore();
+  const { data: portfolioItems, isLoading, error } = usePortfolioItems();
 
-  const portfolioItems = [
-    {
-      id: 1,
-      title: "Elegant Ankara Collection",
-      image: "https://images.unsplash.com/photo-1589571894960-20bbe2828d0a",
-      description:
-        "A stunning collection of Ankara dresses that blend traditional patterns with modern styles.",
-    },
-    {
-      id: 2,
-      title: "Evening Glamour",
-      image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8",
-      description: "Sophisticated evening wear that exudes elegance and charm.",
-    },
-    {
-      id: 3,
-      title: "Luxury Bridal Gowns",
-      image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8",
-      description: "Exquisite bridal gowns designed for the modern bride.",
-    },
-    {
-      id: 4,
-      title: "Professional Office Wear",
-      image: "https://images.unsplash.com/photo-1602810319428-019690571b5b",
-      description: "Chic and stylish office wear for the professional woman.",
-    },
-    {
-      id: 5,
-      title: "Casual Chic Collection",
-      image: "https://images.unsplash.com/photo-1619784299133-f691ffaea42f",
-      description: "Effortlessly stylish casual wear for everyday elegance.",
-    },
-    {
-      id: 6,
-      title: "Skirt and Blouse",
-      image: "https://images.unsplash.com/photo-1581044777550-4cfa60707c03",
-      description: "A perfect blend of comfort and style for any occasion.",
-    },
-  ];
+  // Handle loading state
+  if (isLoading) {
+    return (
+      <div className="h-auto py-15 md:py-20 lg:py-25 bg-gray-100 px-4 sm:px-5 md:px-15 lg:px-25">
+        <div className="flex justify-center items-center min-h-[400px]">
+          <div className="text-xl text-gray-600">Loading portfolio...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle error state
+  if (error) {
+    return (
+      <div className="h-auto py-15 md:py-20 lg:py-25 bg-gray-100 px-4 sm:px-5 md:px-15 lg:px-25">
+        <div className="flex justify-center items-center min-h-[400px]">
+          <div className="text-xl text-red-600">
+            Error loading portfolio items
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle empty data state
+  if (!portfolioItems || portfolioItems.length === 0) {
+    return (
+      <div className="h-auto py-15 md:py-20 lg:py-25 bg-gray-100 px-4 sm:px-5 md:px-15 lg:px-25">
+        <h1 className="text-2xl md:text-4xl lg:text-6xl text-gray-900 text-center">
+          Our <span className="text-yellow-500">Portfolio</span>
+        </h1>
+        <p className="mt-4 text-lg md:text-2xl text-gray-500 text-center">
+          Discover our stunning collection of bespoke designs that blend
+          traditional <br /> African elegance with contemporary fashion trends.
+        </p>
+        <div className="flex justify-center items-center min-h-[200px]">
+          <div className="text-xl text-gray-600">
+            No portfolio items available
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-auto py-15 md:py-20 lg:py-25 bg-gray-100 px-4 sm:px-5 md:px-15 lg:px-25">
-      <h1 className="text-2xl md:text-4xl lg:text-6xl  text-gray-900 text-center">
+      <h1 className="text-2xl md:text-4xl lg:text-6xl text-gray-900 text-center">
         Our <span className="text-yellow-500">Portfolio</span>
       </h1>
       <p className="mt-4 text-lg md:text-2xl text-gray-500 text-center">
@@ -54,23 +61,25 @@ const Portfolio: React.FC = () => {
         traditional <br /> African elegance with contemporary fashion trends.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-10">
-        {portfolioItems.map((item) => (
+        {portfolioItems.map((item: any) => (
           <div
-            onMouseEnter={() => setHoveredTitle(item.title)}
+            onMouseEnter={() => setHoveredTitle(item.name)}
             onMouseLeave={() => setHoveredTitle(null)}
             key={item.id}
             className="bg-white rounded-lg shadow-md overflow-hidden w-full transition-transform duration-300 ease-in-out hover:scale-105"
           >
-            <div className="w-full h-[300px] relative">
+            <div className="w-full h-[250px] relative">
               <img
-                src={item.image}
-                alt={item.title}
-                className="w-full h-[300px] object-cover"
+                src={item.image_url}
+                alt={item.name}
+                className="w-full h-[250px] object-cover"
               />
-              {hoveredTitle === item.title && (
+              {hoveredTitle === item.name && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/50">
                   <Link
-                    to={`/categories/${item.title.toLowerCase().replace(/\s+/g, "-")}`}
+                    to={`/categories/${item.slug
+                      ?.toLowerCase()
+                      .replace(/\s+/g, "-")}`}
                     className="bg-yellow-500 text-white text-lg md:text-xl px-4 py-2 rounded-2xl hover:bg-yellow-600 transition-colors"
                   >
                     <span className="text-white text-lg font-semibold">
@@ -82,9 +91,9 @@ const Portfolio: React.FC = () => {
             </div>
             <div className="p-4">
               <h2 className="text-xl font-semibold text-gray-800">
-                {item.title}
+                {item.name}
               </h2>
-              <p className="mt-2 text-gray-600 md:text-lg">
+              <p className="mt-2 text-gray-600 md:text-base">
                 {item.description}
               </p>
             </div>
