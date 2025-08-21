@@ -11,6 +11,8 @@ import ProductDetails from './pages/user/ProductDetails';
 import CustomOrder from './pages/user/CustomOrder';
 import CartPage from './pages/user/CartPage';
 import CheckoutPage from './pages/user/Checkout';
+import ContactPage from './pages/user/Contact';
+import NotFound from './pages/user/NotFound';
 
 const App: React.FC = () => {
   return (
@@ -20,10 +22,12 @@ const App: React.FC = () => {
           <Route path="/" element={<UserLayout />}>
             <Route index element={<Home />} />
             <Route path="shop" element={<Shop />} />
-            <Route path="product/detail" element={<ProductDetails />} />
+            <Route path="product/detail/:id" element={<ProductDetails />} />
             <Route path="custom-order" element={<CustomOrder />} />
             <Route path="cartpage" element={<CartPage />} />
             <Route path="checkout" element={<CheckoutPage />} />
+            <Route path="contact" element={<ContactPage />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
           
           <Route path="/login" element={<Login />} />

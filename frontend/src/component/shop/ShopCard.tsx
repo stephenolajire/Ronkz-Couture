@@ -8,10 +8,10 @@ interface ShopCardProps {
 
 const ShopCard: React.FC<ShopCardProps> = ({ product }) => {
   return (
-    <Link to="/product/detail">
+    <Link to={`/product/detail/${product.id}`}>
       <div className="bg-gray-50 shadow-md rounded-lg sm:p-4 hover:shadow-lg transition-shadow duration-300">
         <img
-          src={product.image}
+          src={product.image_url}
           alt={product.name}
           className="w-full h-40 md:h-48 object-cover rounded-md mb-2 sm:mb-2.5 md:mb-4"
         />

@@ -30,6 +30,7 @@ export const QUERY_KEYS = {
   USER: "user",
   CART: "cart",
   CUSTOM_ORDERS: "customOrders",
+  PRODUCT_DETAIL: "productDetail",
 } as const;
 
 // Types
@@ -48,6 +49,15 @@ interface CartItem {
   // Add other cart item properties as needed
 }
 
+// Add filter interface
+interface ProductFilters {
+  category?: string;
+  search?: string;
+  ordering?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
 interface StoreContextType {
   // State
   user: User | null;
@@ -57,9 +67,18 @@ interface StoreContextType {
   loading: boolean;
   setLoading: (loading: boolean) => void;
 
+  // Filter state
+  productFilters: ProductFilters;
+  setProductFilters: (filters: ProductFilters) => void;
+  updateProductFilter: (
+    key: keyof ProductFilters,
+    value: string | number | undefined
+  ) => void;
+  clearProductFilters: () => void;
+
   // Query Functions
   usePortfolioItems: () => any;
-  useProducts: () => any;
+  useProducts: () => any; // Now uses internal filter state
   useOrders: (userId?: string) => any;
   useUserProfile: (userId?: string) => any;
 
@@ -102,13 +121,52 @@ const useStore = () => {
     });
   };
 
+  // Updated useProducts to use internal filter state
   const useProducts = () => {
+    const filters = context.productFilters;
+
     return useQuery({
-      queryKey: [QUERY_KEYS.PRODUCTS],
+      queryKey: [QUERY_KEYS.PRODUCTS, filters],
       queryFn: async () => {
-        const response = await api.get("products");
+        let url = "products";
+        const params = new URLSearchParams();
+
+        if (filters?.category) {
+          params.append("category", filters.category);
+        }
+        if (filters?.search) {
+          params.append("search", filters.search);
+        }
+        if (filters?.ordering) {
+          params.append("ordering", filters.ordering);
+        }
+        if (filters?.minPrice !== undefined) {
+          params.append("min_price", filters.minPrice.toString());
+        }
+        if (filters?.maxPrice !== undefined) {
+          params.append("max_price", filters.maxPrice.toString());
+        }
+
+        if (params.toString()) {
+          url += `?${params.toString()}`;
+        }
+
+        const response = await api.get(url);
         return response.data;
       },
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
+    });
+  };
+
+  const useProductDetail = (productId: string) => {
+    return useQuery({
+      queryKey: [QUERY_KEYS.PRODUCT_DETAIL, productId],
+      queryFn: async () => {
+        const response = await api.get(`product/${productId}`);
+        return response.data;
+      },
+      enabled: !!productId,
     });
   };
 
@@ -199,6 +257,7 @@ const useStore = () => {
     ...context,
     usePortfolioItems,
     useProducts,
+    useProductDetail,
     useOrders,
     useUserProfile,
     useCreateOrder,
@@ -212,6 +271,24 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // Add product filters state
+  const [productFilters, setProductFilters] = useState<ProductFilters>({});
+
+  // Filter management functions
+  const updateProductFilter = (
+    key: keyof ProductFilters,
+    value: string | number | undefined
+  ) => {
+    setProductFilters((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const clearProductFilters = () => {
+    setProductFilters({});
+  };
 
   // Local cart management functions
   const addToLocalCart = (item: CartItem) => {
@@ -253,6 +330,12 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
     loading,
     setLoading,
 
+    // Filter state
+    productFilters,
+    setProductFilters,
+    updateProductFilter,
+    clearProductFilters,
+
     // Local cart management
     addToLocalCart,
     removeFromLocalCart,
@@ -282,4 +365,4 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export { StoreProvider };
-export default useStore; // This maintains your current import pattern
+export default useStore;

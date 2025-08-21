@@ -158,6 +158,7 @@ export interface Product {
   category: string;
   subcategory: string;
   description: string;
+  image_url?: string; 
 }
 
 export interface ProductList {
