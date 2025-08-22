@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BsExclamation } from "react-icons/bs";
 import BuyCustomConfirmation from "../../component/shop/BuyCustomConfirmation";
 import { useParams } from "react-router-dom";
-import { useStore } from "../../context/storeContext";
+import { useStore } from "../../context/GlobalContext";
 import Rating from "../../component/shop/Rating";
 
 const ProductDetails: React.FC = () => {

@@ -1,8 +1,8 @@
-import React, { useMemo} from "react";
+import React, { useMemo } from "react";
 import Filter from "../../component/shop/Filter";
 import ShopCard from "../../component/shop/ShopCard";
 import type { Product } from "../../utils/productData";
-import { useStore } from "../../context/storeContext";
+import { useStore } from "../../context/GlobalContext";
 
 const Shop: React.FC = () => {
   const { useProduct } = useStore();
@@ -12,7 +12,6 @@ const Shop: React.FC = () => {
   const products = useMemo(() => {
     return data?.results || data || [];
   }, [data]);
-
 
   // Handle loading state
   if (isLoading) {

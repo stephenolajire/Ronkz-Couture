@@ -12,13 +12,12 @@ import CartPage from "./pages/user/CartPage";
 import CheckoutPage from "./pages/user/Checkout";
 import ContactPage from "./pages/user/Contact";
 import NotFound from "./pages/user/NotFound";
-import { StoreProvider } from "./context/storeContext";
+import { StoreProvider } from "./context/GlobalContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ScrollToTop from "./pages/user/ScrollToTop";
 
-const queryClient = new QueryClient(
-  {
-    defaultOptions: {
+const queryClient = new QueryClient({
+  defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
       gcTime: 10 * 60 * 1000, // 10 minutes
@@ -27,15 +26,14 @@ const queryClient = new QueryClient(
       refetchOnMount: false,
     },
   },
-})
-
+});
 
 const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <StoreProvider>
         <Router>
-          <ScrollToTop/>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<UserLayout />}>
               <Route index element={<Home />} />
