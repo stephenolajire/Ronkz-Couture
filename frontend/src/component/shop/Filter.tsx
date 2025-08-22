@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import type { Product } from "../../utils/productData";
-import { useStore } from "../../context/StoreContext";
+import { useStore } from "../../context/storeContext";
 
 interface FilterProps {
   products: Product[];

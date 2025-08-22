@@ -12,7 +12,7 @@ import CartPage from "./pages/user/CartPage";
 import CheckoutPage from "./pages/user/Checkout";
 import ContactPage from "./pages/user/Contact";
 import NotFound from "./pages/user/NotFound";
-import { StoreProvider } from "./context/StoreContext";
+import { StoreProvider } from "./context/storeContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ScrollToTop from "./pages/user/ScrollToTop";
 

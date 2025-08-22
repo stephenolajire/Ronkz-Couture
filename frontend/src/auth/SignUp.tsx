@@ -1,96 +1,50 @@
-import React, { useState, type FormEvent } from "react";
+import React from "react";
 import { Mail, Lock, User } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useFormik } from "formik";
+import signUpSchema from "./signUpSchema";
 
-interface FormData {
+interface SignUpValues {
   email: string;
   password: string;
-  remember: boolean;
   firstName: string;
   lastName: string;
   cpassword: string;
 }
 
+const onSubmit = async (values: SignUpValues) => {
+  try {
+    // Simulate an API call for sign-up
+    console.log("Signing up with values:", values);
+    // Here you would typically handle the sign-up logic, e.g., API call
+    // await api.signUp(values);
+    alert("Sign-up successful!");
+  } catch (error) {
+    console.error("Signup failed:", error);
+  }
+};
+
 const SignUp: React.FC = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState<FormData>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    remember: false,
-    cpassword: "",
+  const {
+    values,
+    handleChange,
+    handleSubmit,
+    errors,
+    handleBlur,
+    // resetForm,
+    touched,
+    isSubmitting,
+  } = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      cpassword: "",
+    },
+    validationSchema: signUpSchema,
+    onSubmit,
   });
-  const [errors, setErrors] = useState<Partial<FormData>>({});
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-    // Clear error when user starts typing
-    if (errors[name as keyof FormData]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-  };
-
-  const validateForm = (): boolean => {
-    const newErrors: Partial<FormData> = {};
-
-    if (!formData.firstName || !formData.lastName) {
-      newErrors.firstName = "First name cannot be empty";
-      newErrors.lastName = "Last name cannot be empty";
-    } else if (formData.firstName.length < 2 || formData.lastName.length < 2) {
-      newErrors.firstName = "First name must contain atlease 3 letters";
-      newErrors.lastName = "Last name must contain atlease 3 letters";
-    }
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    if (formData.password !== formData.cpassword) {
-      newErrors.cpassword = "Password do not match";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    setIsLoading(true);
-    try {
-      // Add your API call here
-      // const response = await loginUser(formData);
-      console.log("Login attempted with:", formData);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // On successful login
-      navigate("/dashboard");
-    } catch (error) {
-      setErrors({
-        email: "Invalid credentials",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-black w-full flex items-center justify-center py-10">
@@ -116,7 +70,9 @@ const SignUp: React.FC = () => {
             <label className="text-gray-700 block" htmlFor="email">
               First Name
             </label>
-            <div className="flex rounded-md border border-gray-200">
+            <div className={`flex rounded-md border border-gray-200 ${
+                  errors.firstName && touched.firstName ? "border border-red-500" : ""
+                }`}>
               <span className="px-3 py-2 border-r border-gray-200 items-center">
                 <User size={20} className="text-gray-500" />
               </span>
@@ -124,15 +80,14 @@ const SignUp: React.FC = () => {
                 id="firstname"
                 name="firstName"
                 type="text"
-                value={formData.firstName}
+                value={values.firstName}
+                onBlur={handleBlur}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 outline-none ${
-                  errors.firstName ? "border-red-500" : ""
-                }`}
+                className="w-full px-3 py-2 outline-none"
                 placeholder="Enter your your name"
               />
             </div>
-            {errors.firstName && (
+            {errors.firstName && touched.firstName && (
               <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
             )}
           </div>
@@ -140,7 +95,9 @@ const SignUp: React.FC = () => {
             <label className="text-gray-700 block" htmlFor="email">
               Last Name
             </label>
-            <div className="flex rounded-md border border-gray-200">
+            <div className={`flex rounded-md border border-gray-200 ${
+                  errors.lastName && touched.lastName ? "border-red-500" : ""
+                }`}>
               <span className="px-3 py-2 border-r border-gray-200 items-center">
                 <User size={20} className="text-gray-500" />
               </span>
@@ -148,15 +105,14 @@ const SignUp: React.FC = () => {
                 id="lastname"
                 name="lastName"
                 type="text"
-                value={formData.lastName}
+                value={values.lastName}
+                onBlur={handleBlur}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 outline-none ${
-                  errors.lastName ? "border-red-500" : ""
-                }`}
+                className="w-full px-3 py-2 outline-none"
                 placeholder="Enter your surname"
               />
             </div>
-            {errors.lastName && (
+            {errors.lastName && touched.lastName && (
               <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
             )}
           </div>
@@ -164,7 +120,9 @@ const SignUp: React.FC = () => {
             <label className="text-gray-700 block" htmlFor="email">
               Email
             </label>
-            <div className="flex rounded-md border border-gray-200">
+            <div className={`flex rounded-md border border-gray-200 ${
+                  errors.email && touched.email ? "border-red-500" : ""
+                }`}>
               <span className="px-3 py-2 border-r border-gray-200 items-center">
                 <Mail size={20} className="text-gray-500" />
               </span>
@@ -172,16 +130,15 @@ const SignUp: React.FC = () => {
                 id="email"
                 name="email"
                 type="email"
-                value={formData.email}
+                value={values.email}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 outline-none ${
-                  errors.email ? "border-red-500" : ""
-                }`}
+                onBlur={handleBlur}
+                className="w-full px-3 py-2 outline-none"
                 placeholder="Enter your email address"
               />
             </div>
-            {errors.email && (
-              <p className="text-re d-500 text-sm mt-1">{errors.email}</p>
+            {errors.email && touched.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
           </div>
 
@@ -189,7 +146,9 @@ const SignUp: React.FC = () => {
             <label className="text-gray-700 block" htmlFor="password">
               Password
             </label>
-            <div className="flex rounded-md border border-gray-200">
+            <div className={`flex rounded-md border border-gray-200 ${
+                  errors.password && touched.password ? "border-red-500" : ""
+                }`}>
               <span className="px-3 py-2 border-r border-gray-200 items-center">
                 <Lock size={20} className="text-gray-500" />
               </span>
@@ -197,15 +156,14 @@ const SignUp: React.FC = () => {
                 id="password"
                 name="password"
                 type="password"
-                value={formData.password}
+                value={values.password}
+                onBlur={handleBlur}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 outline-none ${
-                  errors.password ? "border-red-500" : ""
-                }`}
+                className="w-full px-3 py-2 outline-none"
                 placeholder="Enter your password"
               />
             </div>
-            {errors.password && (
+            {errors.password && touched.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
             )}
           </div>
@@ -214,7 +172,9 @@ const SignUp: React.FC = () => {
             <label className="text-gray-700 block" htmlFor="password">
               Confirm Password
             </label>
-            <div className="flex rounded-md border border-gray-200">
+            <div className={`flex rounded-md border border-gray-200 ${
+                  errors.cpassword && touched.cpassword ? "border-red-500" : ""
+                }`}>
               <span className="px-3 py-2 border-r border-gray-200 items-center">
                 <Lock size={20} className="text-gray-500" />
               </span>
@@ -222,27 +182,26 @@ const SignUp: React.FC = () => {
                 id="cpassword"
                 name="cpassword"
                 type="password"
-                value={formData.cpassword}
+                value={values.cpassword}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 outline-none ${
-                  errors.cpassword ? "border-red-500" : ""
-                }`}
+                onBlur={handleBlur}
+                className="w-full px-3 py-2 outline-none"
                 placeholder="Enter your password"
               />
             </div>
-            {errors.cpassword && (
+            {errors.cpassword && touched.cpassword && (
               <p className="text-red-500 text-sm mt-1">{errors.cpassword}</p>
             )}
           </div>
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isSubmitting}
             className={`w-full bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600 transition-colors ${
-              isLoading ? "opacity-50 cursor-not-allowed" : ""
+              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {isLoading ? "Signing up..." : "Sign Up"}
+            {isSubmitting ? "Signing up..." : "Sign Up"}
           </button>
 
           <p className="text-center text-gray-700">

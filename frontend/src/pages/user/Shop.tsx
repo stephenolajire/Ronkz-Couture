@@ -2,7 +2,7 @@ import React, { useMemo, useEffect } from "react";
 import Filter from "../../component/shop/Filter";
 import ShopCard from "../../component/shop/ShopCard";
 import type { Product } from "../../utils/productData";
-import { useStore } from "../../context/StoreContext";
+import { useStore } from "../../context/storeContext";
 
 const Shop: React.FC = () => {
   const { useProduct } = useStore();

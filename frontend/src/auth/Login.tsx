@@ -1,78 +1,43 @@
-import React, { useState, type FormEvent } from "react";
+import React from "react";
 import { Mail, Lock } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useFormik } from "formik";
+import LoginSchema from "./LoginSchema";
 
-interface FormData {
-  email: string;
-  password: string;
-  remember: boolean;
-}
+// interface FormData {
+//   email: string;
+//   password: string;
+//   remember: boolean;
+// }
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState<FormData>({
-    email: "",
-    password: "",
-    remember: false,
+  const {
+    values,
+    handleChange,
+    handleSubmit,
+    handleBlur,
+    touched,
+    errors,
+    isSubmitting,
+  } = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+      remember: false,
+    },
+    validationSchema: LoginSchema,
+    onSubmit: async (values) => {
+      try {
+        // Simulate an API call for login
+        console.log("Logging in with values:", values);
+        // Here you would typically handle the login logic, e.g., API call
+        // await api.login(values);
+        alert("Login successful!");
+      } catch (error) {
+        console.error("Login failed:", error);
+      }
+    },
   });
-  const [errors, setErrors] = useState<Partial<FormData>>({});
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-    // Clear error when user starts typing
-    if (errors[name as keyof FormData]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-  };
-
-  const validateForm = (): boolean => {
-    const newErrors: Partial<FormData> = {};
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    setIsLoading(true);
-    try {
-      // Add your API call here
-      // const response = await loginUser(formData);
-      console.log("Login attempted with:", formData);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // On successful login
-      navigate("/dashboard");
-    } catch (error) {
-      setErrors({
-        email: "Invalid credentials",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center py-10 bg-black">
@@ -106,15 +71,16 @@ const Login: React.FC = () => {
                 id="email"
                 name="email"
                 type="email"
-                value={formData.email}
+                value={values.email}
+                onBlur={handleBlur}
                 onChange={handleChange}
                 className={`w-full px-3 py-2 outline-none ${
-                  errors.email ? "border-red-500" : ""
+                  errors.email && touched.email ? "border-red-500" : ""
                 }`}
                 placeholder="Enter your email address"
               />
             </div>
-            {errors.email && (
+            {errors.email && touched.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
           </div>
@@ -131,15 +97,16 @@ const Login: React.FC = () => {
                 id="password"
                 name="password"
                 type="password"
-                value={formData.password}
+                value={values.password}
+                onBlur={handleBlur}
                 onChange={handleChange}
                 className={`w-full px-3 py-2 outline-none ${
-                  errors.password ? "border-red-500" : ""
+                  errors.password && touched.password ? "border-red-500" : ""
                 }`}
                 placeholder="Enter your password"
               />
             </div>
-            {errors.password && (
+            {errors.password && touched.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
             )}
           </div>
@@ -150,7 +117,8 @@ const Login: React.FC = () => {
                 type="checkbox"
                 id="remember"
                 name="remember"
-                checked={formData.remember}
+                checked={values.remember}
+                onBlur={handleBlur}
                 onChange={handleChange}
                 className="mr-2"
               />
@@ -168,12 +136,12 @@ const Login: React.FC = () => {
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isSubmitting}
             className={`w-full bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600 transition-colors ${
-              isLoading ? "opacity-50 cursor-not-allowed" : ""
+              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {isLoading ? "Signing in..." : "Sign In"}
+            {isSubmitting ? "Signing in..." : "Sign In"}
           </button>
 
           <p className="text-center text-gray-700">
