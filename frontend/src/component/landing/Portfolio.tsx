@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useStore } from "../../context/storeContext";
+import { useStore } from "../../context/GlobalContext";
 
 const Portfolio: React.FC = () => {
   const [hoveredTitle, setHoveredTitle] = useState<string | null>(null);
