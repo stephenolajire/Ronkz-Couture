@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo} from "react";
 import Filter from "../../component/shop/Filter";
 import ShopCard from "../../component/shop/ShopCard";
 import type { Product } from "../../utils/productData";
@@ -13,8 +13,6 @@ const Shop: React.FC = () => {
     return data?.results || data || [];
   }, [data]);
 
-  // Use useEffect for logging to avoid console spam
-  useEffect(() => {}, [products]);
 
   // Handle loading state
   if (isLoading) {

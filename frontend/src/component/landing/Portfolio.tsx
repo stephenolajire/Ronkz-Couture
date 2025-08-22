@@ -5,9 +5,20 @@ import { useStore } from "../../context/storeContext";
 const Portfolio: React.FC = () => {
   const [hoveredTitle, setHoveredTitle] = useState<string | null>(null);
 
-  const { categories } = useStore();
-  const portfolioItems = categories
+  const { useCategory } = useStore();
+  const { data: portfolioItems, error, isLoading } = useCategory();
 
+   if (isLoading) {
+     return (
+       <div className="flex justify-center items-center min-h-screen">
+         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-500"></div>
+       </div>
+     );
+   }
+
+  if (error) {
+    return <div>Error loading portfolio items</div>;
+  }
 
   // Handle empty data state
   if (!portfolioItems || portfolioItems.length === 0) {
