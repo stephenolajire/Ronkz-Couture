@@ -2,11 +2,11 @@ import React, { useMemo, useEffect } from "react";
 import Filter from "../../component/shop/Filter";
 import ShopCard from "../../component/shop/ShopCard";
 import type { Product } from "../../utils/productData";
-import useStore from "../../context/StoreContext";
+import { useStore } from "../../context/StoreContext";
 
 const Shop: React.FC = () => {
-  const { useProducts } = useStore();
-  const { data, isLoading, error } = useProducts();
+  const { useProduct } = useStore();
+  const { data, isLoading, error } = useProduct();
 
   // Memoize products to prevent unnecessary re-renders
   const products = useMemo(() => {
@@ -14,15 +14,13 @@ const Shop: React.FC = () => {
   }, [data]);
 
   // Use useEffect for logging to avoid console spam
-  useEffect(() => {
-    console.log("Products fetched:", products);
-  }, [products]);
+  useEffect(() => {}, [products]);
 
   // Handle loading state
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="text-lg">Loading products...</div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-500"></div>
       </div>
     );
   }
@@ -57,9 +55,9 @@ const Shop: React.FC = () => {
             </span>
           </h1>
 
-          {/* Enhanced description */}
+          {/* Enhanced description - Changed from p to div */}
           <div className="max-w-4xl">
-            <p className="text-lg md:text-xl lg:text-2xl text-gray-300 text-center leading-relaxed font-light">
+            <div className="text-lg md:text-xl lg:text-2xl text-gray-300 text-center leading-relaxed font-light">
               Shop our{" "}
               <span className="text-yellow-400 font-medium relative">
                 curated collection of stunning
@@ -72,7 +70,7 @@ const Shop: React.FC = () => {
                 attention to details
                 <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-yellow-400 to-transparent"></div>
               </span>{" "}
-            </p>
+            </div>
           </div>
         </div>
       </div>

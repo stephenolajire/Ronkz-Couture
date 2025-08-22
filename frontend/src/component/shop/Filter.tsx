@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import type { Product } from "../../utils/productData";
-import useStore from "../../context/StoreContext";
+import { useStore } from "../../context/StoreContext";
 
 interface FilterProps {
   products: Product[];
@@ -8,13 +8,13 @@ interface FilterProps {
 
 const Filter: React.FC<FilterProps> = ({ products }) => {
   const {
-    usePortfolioItems,
+    categories,
     productFilters,
     updateProductFilter,
     clearProductFilters,
   } = useStore();
 
-  const { data: categoryLists } = usePortfolioItems();
+ const categoryLists = categories;
 
   // Local state for immediate UI updates
   const [searchTerm, setSearchTerm] = useState(productFilters.search || "");

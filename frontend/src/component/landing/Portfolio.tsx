@@ -1,35 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import useStore from "../../context/StoreContext";
+import { useStore } from "../../context/StoreContext";
 
 const Portfolio: React.FC = () => {
   const [hoveredTitle, setHoveredTitle] = useState<string | null>(null);
-  const { usePortfolioItems } = useStore();
-  const { data: portfolioItems, isLoading, error } = usePortfolioItems();
 
-  // Handle loading state
-  if (isLoading) {
-    return (
-      <div className="h-auto py-15 md:py-20 lg:py-25 bg-gray-100 px-4 sm:px-5 md:px-15 lg:px-25">
-        <div className="flex justify-center items-center min-h-[400px]">
-          <div className="text-xl text-gray-600">Loading portfolio...</div>
-        </div>
-      </div>
-    );
-  }
+  const { categories } = useStore();
+  const portfolioItems = categories
 
-  // Handle error state
-  if (error) {
-    return (
-      <div className="h-auto py-15 md:py-20 lg:py-25 bg-gray-100 px-4 sm:px-5 md:px-15 lg:px-25">
-        <div className="flex justify-center items-center min-h-[400px]">
-          <div className="text-xl text-red-600">
-            Error loading portfolio items
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // Handle empty data state
   if (!portfolioItems || portfolioItems.length === 0) {
