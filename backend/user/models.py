@@ -40,6 +40,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=255)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    email_otp = models.CharField(max_length=6, null=True, blank=True)
+    email_otp_created_at = models.DateTimeField(null=True, blank=True)
+    email_otp_expires_at = models.DateTimeField(null=True, blank=True)
+    is_email_verified = models.BooleanField(default=False)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
