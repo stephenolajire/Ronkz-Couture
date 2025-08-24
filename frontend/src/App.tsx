@@ -15,6 +15,7 @@ import NotFound from "./pages/user/NotFound";
 import { StoreProvider } from "./context/GlobalContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ScrollToTop from "./pages/user/ScrollToTop";
+import VerifyEmail from "./auth/VerifyEmail";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,6 +49,7 @@ const App: React.FC = () => {
 
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<SignUp />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
           </Routes>
         </Router>
       </StoreProvider>

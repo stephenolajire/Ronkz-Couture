@@ -1,8 +1,10 @@
 import React from "react";
 import { Mail, Lock, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import signUpSchema from "./signUpSchema";
+import { useMutation } from "@tanstack/react-query";
+import api from "../hook/api";
 
 interface SignUpValues {
   email: string;
@@ -12,29 +14,53 @@ interface SignUpValues {
   cpassword: string;
 }
 
-const onSubmit = async (values: SignUpValues) => {
-  try {
-    // Simulate an API call for sign-up
-    console.log("Signing up with values:", values);
-    // Here you would typically handle the sign-up logic, e.g., API call
-    // await api.signUp(values);
-    alert("Sign-up successful!");
-  } catch (error) {
-    console.error("Signup failed:", error);
-  }
-};
+interface SignUpCredentials {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}
 
 const SignUp: React.FC = () => {
-  const {
-    values,
-    handleChange,
-    handleSubmit,
-    errors,
-    handleBlur,
-    // resetForm,
-    touched,
-    isSubmitting,
-  } = useFormik({
+  const navigate = useNavigate();
+
+  // Sign up mutation hook
+  const signUpMutation = useMutation({
+    mutationKey: ["signup"],
+    mutationFn: async ({
+      email,
+      password,
+      firstName,
+      lastName,
+    }: SignUpCredentials) => {
+      const response = await api.post("register/", {
+        email: email,
+        password: password,
+        first_name: firstName,
+        last_name: lastName,
+      });
+      return response.data;
+    },
+    onSuccess: (data, variables) => {
+      // Handle successful registration
+      console.log("Registration successful:", data);
+
+      // Save user email to localStorage
+      localStorage.setItem("userEmail", variables.email);
+
+      // Reset the form
+      formik.resetForm();
+
+      // Navigate to verification page
+      navigate("/verify-email");
+    },
+    onError: (error) => {
+      // Handle registration error
+      console.error("Registration failed:", error);
+    },
+  });
+
+  const formik = useFormik<SignUpValues>({
     initialValues: {
       email: "",
       password: "",
@@ -43,8 +69,34 @@ const SignUp: React.FC = () => {
       cpassword: "",
     },
     validationSchema: signUpSchema,
-    onSubmit,
+    onSubmit: async (values, { setSubmitting}) => {
+      try {
+        await signUpMutation.mutateAsync({
+          email: values.email,
+          password: values.password,
+          firstName: values.firstName,
+          lastName: values.lastName,
+        });
+      } catch (error) {
+        console.error("Submission error:", error);
+      } finally {
+        setSubmitting(false);
+      }
+    },
   });
+
+  const {
+    values,
+    handleChange,
+    handleSubmit,
+    errors,
+    handleBlur,
+    touched,
+    isSubmitting,
+  } = formik;
+
+  // Use mutation loading state for better UX
+  const isLoading = signUpMutation.isPending || isSubmitting;
 
   return (
     <div className="min-h-screen bg-black w-full flex items-center justify-center py-10">
@@ -67,13 +119,17 @@ const SignUp: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label className="text-gray-700 block" htmlFor="email">
+            <label className="text-gray-700 block" htmlFor="firstname">
               First Name
             </label>
-            <div className={`flex rounded-md border border-gray-200 ${
-                  errors.firstName && touched.firstName ? "border border-red-500" : ""
-                }`}>
-              <span className="px-3 py-2 border-r border-gray-200 items-center">
+            <div
+              className={`flex rounded-md border ${
+                errors.firstName && touched.firstName
+                  ? "border-red-500"
+                  : "border-gray-200"
+              }`}
+            >
+              <span className="px-3 py-2 border-r border-gray-200 flex items-center">
                 <User size={20} className="text-gray-500" />
               </span>
               <input
@@ -83,22 +139,28 @@ const SignUp: React.FC = () => {
                 value={values.firstName}
                 onBlur={handleBlur}
                 onChange={handleChange}
-                className="w-full px-3 py-2 outline-none"
-                placeholder="Enter your your name"
+                className="w-full px-3 py-2 outline-none rounded-r-md"
+                placeholder="Enter your first name"
+                disabled={isLoading}
               />
             </div>
             {errors.firstName && touched.firstName && (
               <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
             )}
           </div>
+
           <div className="space-y-2">
-            <label className="text-gray-700 block" htmlFor="email">
+            <label className="text-gray-700 block" htmlFor="lastname">
               Last Name
             </label>
-            <div className={`flex rounded-md border border-gray-200 ${
-                  errors.lastName && touched.lastName ? "border-red-500" : ""
-                }`}>
-              <span className="px-3 py-2 border-r border-gray-200 items-center">
+            <div
+              className={`flex rounded-md border ${
+                errors.lastName && touched.lastName
+                  ? "border-red-500"
+                  : "border-gray-200"
+              }`}
+            >
+              <span className="px-3 py-2 border-r border-gray-200 flex items-center">
                 <User size={20} className="text-gray-500" />
               </span>
               <input
@@ -108,22 +170,28 @@ const SignUp: React.FC = () => {
                 value={values.lastName}
                 onBlur={handleBlur}
                 onChange={handleChange}
-                className="w-full px-3 py-2 outline-none"
-                placeholder="Enter your surname"
+                className="w-full px-3 py-2 outline-none rounded-r-md"
+                placeholder="Enter your last name"
+                disabled={isLoading}
               />
             </div>
             {errors.lastName && touched.lastName && (
               <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
             )}
           </div>
+
           <div className="space-y-2">
             <label className="text-gray-700 block" htmlFor="email">
               Email
             </label>
-            <div className={`flex rounded-md border border-gray-200 ${
-                  errors.email && touched.email ? "border-red-500" : ""
-                }`}>
-              <span className="px-3 py-2 border-r border-gray-200 items-center">
+            <div
+              className={`flex rounded-md border ${
+                errors.email && touched.email
+                  ? "border-red-500"
+                  : "border-gray-200"
+              }`}
+            >
+              <span className="px-3 py-2 border-r border-gray-200 flex items-center">
                 <Mail size={20} className="text-gray-500" />
               </span>
               <input
@@ -133,8 +201,9 @@ const SignUp: React.FC = () => {
                 value={values.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className="w-full px-3 py-2 outline-none"
+                className="w-full px-3 py-2 outline-none rounded-r-md"
                 placeholder="Enter your email address"
+                disabled={isLoading}
               />
             </div>
             {errors.email && touched.email && (
@@ -146,10 +215,14 @@ const SignUp: React.FC = () => {
             <label className="text-gray-700 block" htmlFor="password">
               Password
             </label>
-            <div className={`flex rounded-md border border-gray-200 ${
-                  errors.password && touched.password ? "border-red-500" : ""
-                }`}>
-              <span className="px-3 py-2 border-r border-gray-200 items-center">
+            <div
+              className={`flex rounded-md border ${
+                errors.password && touched.password
+                  ? "border-red-500"
+                  : "border-gray-200"
+              }`}
+            >
+              <span className="px-3 py-2 border-r border-gray-200 flex items-center">
                 <Lock size={20} className="text-gray-500" />
               </span>
               <input
@@ -159,8 +232,9 @@ const SignUp: React.FC = () => {
                 value={values.password}
                 onBlur={handleBlur}
                 onChange={handleChange}
-                className="w-full px-3 py-2 outline-none"
+                className="w-full px-3 py-2 outline-none rounded-r-md"
                 placeholder="Enter your password"
+                disabled={isLoading}
               />
             </div>
             {errors.password && touched.password && (
@@ -169,13 +243,17 @@ const SignUp: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-gray-700 block" htmlFor="password">
+            <label className="text-gray-700 block" htmlFor="cpassword">
               Confirm Password
             </label>
-            <div className={`flex rounded-md border border-gray-200 ${
-                  errors.cpassword && touched.cpassword ? "border-red-500" : ""
-                }`}>
-              <span className="px-3 py-2 border-r border-gray-200 items-center">
+            <div
+              className={`flex rounded-md border ${
+                errors.cpassword && touched.cpassword
+                  ? "border-red-500"
+                  : "border-gray-200"
+              }`}
+            >
+              <span className="px-3 py-2 border-r border-gray-200 flex items-center">
                 <Lock size={20} className="text-gray-500" />
               </span>
               <input
@@ -185,8 +263,9 @@ const SignUp: React.FC = () => {
                 value={values.cpassword}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className="w-full px-3 py-2 outline-none"
-                placeholder="Enter your password"
+                className="w-full px-3 py-2 outline-none rounded-r-md"
+                placeholder="Confirm your password"
+                disabled={isLoading}
               />
             </div>
             {errors.cpassword && touched.cpassword && (
@@ -196,16 +275,16 @@ const SignUp: React.FC = () => {
 
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isLoading}
             className={`w-full bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600 transition-colors ${
-              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {isSubmitting ? "Signing up..." : "Sign Up"}
+            {isLoading ? "Signing up..." : "Sign Up"}
           </button>
 
           <p className="text-center text-gray-700">
-            Already have an account? click{" "}
+            Already have an account? Click{" "}
             <Link to="/login" className="text-yellow-500">
               here
             </Link>{" "}

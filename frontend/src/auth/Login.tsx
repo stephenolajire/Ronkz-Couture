@@ -1,16 +1,104 @@
 import React from "react";
 import { Mail, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import LoginSchema from "./LoginSchema";
+import { useMutation } from "@tanstack/react-query";
+import api from "../hook/api";
 
-// interface FormData {
-//   email: string;
-//   password: string;
-//   remember: boolean;
-// }
+interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+interface LoginResponse {
+  access: string;
+  refresh: string;
+  user?: {
+    id: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+  };
+  message?: string;
+}
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
+
+  // Move the mutation hook to the component level
+  const loginMutation = useMutation({
+    mutationKey: ["login"],
+    mutationFn: async ({ email, password }: LoginCredentials) => {
+      const response = await api.post("login/", {
+        email: email,
+        password: password,
+      });
+      return response.data;
+    },
+    onSuccess: (data: LoginResponse) => {
+      // Handle successful login
+      console.log("Login successful:", data);
+
+      // Save tokens to localStorage
+      if (data.access) {
+        localStorage.setItem("accessToken", data.access);
+      }
+
+      if (data.refresh) {
+        localStorage.setItem("refreshToken", data.refresh);
+      }
+
+      // Optionally save user information
+      if (data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
+
+      // Reset form after successful login
+      formik.resetForm();
+
+      // Navigate to dashboard or home page
+      navigate("/dashboard");
+    },
+    onError: (error: any) => {
+      // Handle login error
+      console.error("Login failed:", error);
+
+      // Set form error based on API response
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.response?.data?.detail ||
+        "Login failed. Please try again.";
+
+      formik.setStatus({ error: errorMessage });
+    },
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+      remember: false,
+    },
+    validationSchema: LoginSchema,
+    onSubmit: async (values, { setSubmitting, setStatus }) => {
+      // Clear previous errors
+      setStatus(null);
+
+      try {
+        await loginMutation.mutateAsync({
+          email: values.email,
+          password: values.password,
+        });
+      } catch (error) {
+        console.error("Submission error:", error);
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
+
   const {
     values,
     handleChange,
@@ -19,25 +107,11 @@ const Login: React.FC = () => {
     touched,
     errors,
     isSubmitting,
-  } = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-      remember: false,
-    },
-    validationSchema: LoginSchema,
-    onSubmit: async (values) => {
-      try {
-        // Simulate an API call for login
-        console.log("Logging in with values:", values);
-        // Here you would typically handle the login logic, e.g., API call
-        // await api.login(values);
-        alert("Login successful!");
-      } catch (error) {
-        console.error("Login failed:", error);
-      }
-    },
-  });
+    status,
+  } = formik;
+
+  // Use mutation loading state instead of formik's isSubmitting for better UX
+  const isLoading = loginMutation.isPending || isSubmitting;
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center py-10 bg-black">
@@ -59,12 +133,25 @@ const Login: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Display API error message */}
+          {status?.error && (
+            <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-sm">
+              {status.error}
+            </div>
+          )}
+
           <div className="space-y-2">
             <label className="text-gray-700 block" htmlFor="email">
               Email
             </label>
-            <div className="flex rounded-md border border-gray-200">
-              <span className="px-3 py-2 border-r border-gray-200 items-center">
+            <div
+              className={`flex rounded-md border ${
+                errors.email && touched.email
+                  ? "border-red-500"
+                  : "border-gray-200"
+              }`}
+            >
+              <span className="px-3 py-2 border-r border-gray-200 flex items-center">
                 <Mail size={20} className="text-gray-500" />
               </span>
               <input
@@ -74,10 +161,9 @@ const Login: React.FC = () => {
                 value={values.email}
                 onBlur={handleBlur}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 outline-none ${
-                  errors.email && touched.email ? "border-red-500" : ""
-                }`}
+                className="w-full px-3 py-2 outline-none rounded-r-md"
                 placeholder="Enter your email address"
+                disabled={isLoading}
               />
             </div>
             {errors.email && touched.email && (
@@ -89,8 +175,14 @@ const Login: React.FC = () => {
             <label className="text-gray-700 block" htmlFor="password">
               Password
             </label>
-            <div className="flex rounded-md border border-gray-200">
-              <span className="px-3 py-2 border-r border-gray-200 items-center">
+            <div
+              className={`flex rounded-md border ${
+                errors.password && touched.password
+                  ? "border-red-500"
+                  : "border-gray-200"
+              }`}
+            >
+              <span className="px-3 py-2 border-r border-gray-200 flex items-center">
                 <Lock size={20} className="text-gray-500" />
               </span>
               <input
@@ -100,10 +192,9 @@ const Login: React.FC = () => {
                 value={values.password}
                 onBlur={handleBlur}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 outline-none ${
-                  errors.password && touched.password ? "border-red-500" : ""
-                }`}
+                className="w-full px-3 py-2 outline-none rounded-r-md"
                 placeholder="Enter your password"
+                disabled={isLoading}
               />
             </div>
             {errors.password && touched.password && (
@@ -121,6 +212,7 @@ const Login: React.FC = () => {
                 onBlur={handleBlur}
                 onChange={handleChange}
                 className="mr-2"
+                disabled={isLoading}
               />
               <label htmlFor="remember" className="text-sm text-gray-600">
                 Remember me
@@ -136,20 +228,20 @@ const Login: React.FC = () => {
 
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isLoading}
             className={`w-full bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600 transition-colors ${
-              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {isSubmitting ? "Signing in..." : "Sign In"}
+            {isLoading ? "Signing in..." : "Sign In"}
           </button>
 
           <p className="text-center text-gray-700">
-            Dont have an account yet? click{" "}
+            Don't have an account yet? Click{" "}
             <Link to="/register" className="text-yellow-500">
               here
             </Link>{" "}
-            to signup
+            to sign up
           </p>
         </form>
       </div>
