@@ -1,10 +1,24 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Menu, ShoppingCart, X } from "lucide-react";
+import { useStore } from "../../context/GlobalContext";
 
 const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [cartOpen, setCartOpen] = React.useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    checkAuth();
+    window.location.reload();
+  };
+
+ const { isAuthenticated, checkAuth } = useStore();
+
+  React.useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -136,20 +150,38 @@ const Navigation: React.FC = () => {
       </div>
 
       {/* Desktop Login/Register buttons */}
-      <div className="hidden md:flex items-center space-x-2">
-        <NavLink
-          to="/login"
-          className="border border-yellow-500 text-yellow-500 px-4 py-2 rounded hover:bg-yellow-500 hover:text-white transition-colors"
-        >
-          Login
-        </NavLink>
-        <NavLink
-          to="/register"
-          className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
-        >
-          Register
-        </NavLink>
-      </div>
+      {isAuthenticated ? (
+        <div className="hidden md:flex items-center space-x-2">
+          <NavLink
+            to="/profile"
+            className="border border-yellow-500 text-yellow-500 px-4 py-2 rounded hover:bg-yellow-500 hover:text-white transition-colors"
+          >
+            Profile
+          </NavLink>
+          <NavLink
+            to="/"
+            onClick={handleLogout}
+            className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
+          >
+            Logout
+          </NavLink>
+        </div>
+      ) : (
+        <div className="hidden md:flex items-center space-x-2">
+          <NavLink
+            to="/login"
+            className="border border-yellow-500 text-yellow-500 px-4 py-2 rounded hover:bg-yellow-500 hover:text-white transition-colors"
+          >
+            Login
+          </NavLink>
+          <NavLink
+            to="/register"
+            className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
+          >
+            Register
+          </NavLink>
+        </div>
+      )}
 
       {/* Mobile navigation */}
       <div
@@ -176,28 +208,60 @@ const Navigation: React.FC = () => {
               </NavLink>
             </li>
           ))}
-          <li className="hover:text-yellow-500 text-lg capitalize text-right pr-4">
-            <NavLink
-              className={({ isActive }) =>
-                isActive ? "text-yellow-500" : "text-gray-900"
-              }
-              to="/login"
-              onClick={() => setIsOpen(false)}
-            >
-              Login
-            </NavLink>
-          </li>
-          <li className="hover:text-yellow-500 text-lg capitalize text-right pr-4">
-            <NavLink
-              className={({ isActive }) =>
-                isActive ? "text-yellow-500" : "text-gray-900"
-              }
-              to="/register"
-              onClick={() => setIsOpen(false)}
-            >
-              Register
-            </NavLink>
-          </li>
+          {isAuthenticated ? (
+            <div>
+              <li className="hover:text-yellow-500 text-lg capitalize text-right pr-4">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? "text-yellow-500" : "text-gray-900"
+                  }
+                  to="/profile"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Profile
+                </NavLink>
+              </li>
+              <li className="hover:text-yellow-500 text-lg capitalize text-right pr-4 mt-4">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? "text-gray-900" : "text-gray-900"
+                  }
+                  to="/"
+                  onClick={() => {
+                    setIsOpen(false);
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </NavLink>
+              </li>
+            </div>
+          ) : (
+            <div>
+              <li className="hover:text-yellow-500 text-lg capitalize text-right pr-4">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? "text-yellow-500" : "text-gray-900"
+                  }
+                  to="/login"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Login
+                </NavLink>
+              </li>
+              <li className="hover:text-yellow-500 text-lg capitalize text-right pr-4 mt-4">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? "text-yellow-500" : "text-gray-900"
+                  }
+                  to="/register"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Register
+                </NavLink>
+              </li>
+            </div>
+          )}
         </ul>
       </div>
     </header>

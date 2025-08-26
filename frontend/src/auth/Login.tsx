@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import LoginSchema from "./LoginSchema";
 import { useMutation } from "@tanstack/react-query";
 import api from "../hook/api";
+import { useStore } from "../context/GlobalContext";
 
 interface LoginCredentials {
   email: string;
@@ -25,6 +26,7 @@ interface LoginResponse {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const {checkAuth} = useStore();
 
   // Move the mutation hook to the component level
   const loginMutation = useMutation({
@@ -39,7 +41,7 @@ const Login: React.FC = () => {
     onSuccess: (data: LoginResponse) => {
       // Handle successful login
       console.log("Login successful:", data);
-
+    
       // Save tokens to localStorage
       if (data.access) {
         localStorage.setItem("accessToken", data.access);
@@ -58,7 +60,9 @@ const Login: React.FC = () => {
       formik.resetForm();
 
       // Navigate to dashboard or home page
-      navigate("/dashboard");
+      navigate("/");
+      checkAuth();
+      window.location.reload();
     },
     onError: (error: any) => {
       // Handle login error
@@ -83,7 +87,6 @@ const Login: React.FC = () => {
     },
     validationSchema: LoginSchema,
     onSubmit: async (values, { setSubmitting, setStatus }) => {
-      // Clear previous errors
       setStatus(null);
 
       try {

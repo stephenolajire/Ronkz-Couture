@@ -17,12 +17,14 @@ import logging
 
 # Create your views here.
 class CategoryListView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True, context={'request': request})
         return Response(serializer.data)
     
 class ProductListView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request):
         try:
             # Get category from query parameters
@@ -94,6 +96,7 @@ class ProductListView(APIView):
             )
     
 class ProductDetailView(generics.RetrieveAPIView):
+    permission_classes = [AllowAny]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 

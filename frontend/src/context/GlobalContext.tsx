@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import api from "../hook/api";
 import { useQuery } from "@tanstack/react-query";
+import {jwtDecode} from "jwt-decode"
 
 export const QUERY_KEYS = {
   CATEGORIES: "categories",
@@ -22,6 +23,8 @@ interface StoreContextType {
   useCategory: () => any;
   useProduct: () => any;
   useProductDetail: (productId: string) => any;
+  checkAuth: () => void;
+  isAuthenticated: boolean;
 
   categories: any[];
   productLists: any[];
@@ -51,6 +54,7 @@ export const useStore = () => {
 export const StoreProvider = ({ children }: { children: ReactNode }) => {
   // Filter state management
   const [productFilters, setProductFilters] = useState<ProductFilters>({});
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const updateProductFilter = (
     key: keyof ProductFilters,
@@ -65,6 +69,23 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const clearProductFilters = () => {
     setProductFilters({});
   };
+
+  // Check authentication
+  const token = localStorage.getItem("accessToken");
+
+  const checkAuth = ()=> {
+    if (token) {
+      const decoded: any = jwtDecode(token);
+      const expiration = decoded.exp * 1000;
+      const currentTime = Date.now();
+
+      if (currentTime < expiration) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    }
+  }
 
   // fetch categories
   const useCategory = () => {
@@ -144,7 +165,9 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     clearProductFilters,
     useProductDetail,
     categories,
-    productLists
+    productLists,
+    checkAuth,
+    isAuthenticated,
   };
 
   return (
