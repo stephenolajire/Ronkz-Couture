@@ -230,7 +230,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
     }
   };
 
-  const handleOtpPaste = (index: number, e: React.ClipboardEvent) => {
+  const handleOtpPaste = ( e: React.ClipboardEvent) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData("text");
     if (pastedData.length === 6) {
@@ -376,7 +376,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
                   value={digit}
                   onChange={(e) => handleOtpChange(index, e.target.value)}
                   onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                  onPaste={(e) => handleOtpPaste(index, e)}
+                  onPaste={(e) => handleOtpPaste(e)}
                   className={`w-12 h-12 text-center text-lg font-semibold border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-colors ${
                     (otpFormik.touched.otp && otpFormik.errors.otp) ||
                     verifyOtpMutation.isError
