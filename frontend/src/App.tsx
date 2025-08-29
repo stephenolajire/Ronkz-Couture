@@ -17,6 +17,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ScrollToTop from "./pages/user/ScrollToTop";
 import VerifyEmail from "./auth/VerifyEmail";
 import ForgotPassword from "./auth/ForgotPassword";
+import CustomCart from "./pages/user/CustomCartPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,6 +44,7 @@ const App: React.FC = () => {
               <Route path="product/detail/:id" element={<ProductDetails />} />
               <Route path="custom-order" element={<CustomOrder />} />
               <Route path="cartpage" element={<CartPage />} />
+              <Route path="custom-cart" element={<CustomCart />} />
               <Route path="checkout" element={<CheckoutPage />} />
               <Route path="contact" element={<ContactPage />} />
               <Route path="*" element={<NotFound />} />

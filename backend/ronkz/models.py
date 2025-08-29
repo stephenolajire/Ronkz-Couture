@@ -28,16 +28,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
 
 
 class CustomOrder(models.Model):
-    OCCASION_CHOICES = [
-        ('birthday', 'Birthday'),
-        ('burial', 'Burial'),
-        ('graduation', 'Graduation'),
-        ('office', 'Office'),
-        ('wedding', 'Wedding'),
-    ]
     
     BUDGET_CHOICES = [
         ('15000-25000', '₦15,000 - ₦25,000'),
@@ -61,17 +55,27 @@ class CustomOrder(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField()
-    whatsapp_number = models.CharField(max_length=20)
+    whatsapp = models.CharField(max_length=20)
     
     # Design Information
-    style_description = models.TextField()
-    occasion = models.CharField(max_length=20, choices=OCCASION_CHOICES)
-    budget = models.CharField(max_length=20, choices=BUDGET_CHOICES)
+    styleDescription = models.TextField()
+    occasion = models.CharField(max_length=20)
+    budget = models.CharField(max_length=20)
     timeline = models.DateField()
-    
+
+    # measurement
+    neck = models.FloatField(validators=[MinValueValidator(0)], default=12)
+    arms = models.FloatField(validators=[MinValueValidator(0)], default=11)
+    shoulders = models.FloatField(validators=[MinValueValidator(0)], default=12)
+    chest = models.FloatField(validators=[MinValueValidator(0)], default=34)
+    waist = models.FloatField(validators=[MinValueValidator(0)], default=28)
+    hips = models.FloatField(validators=[MinValueValidator(0)], default=36)
+    inseam = models.FloatField(validators=[MinValueValidator(0)], default=32)
+    height = models.FloatField(validators=[MinValueValidator(0)], default=60)
+
     # Images
-    style_image = models.ImageField(upload_to='custom_orders/styles/', null=True, blank=True)
-    personal_image = models.ImageField(upload_to='custom_orders/personal/', null=True, blank=True)
+    image = models.ImageField(upload_to='custom_orders/styles/', null=True, blank=True)
+    picture = models.ImageField(upload_to='custom_orders/personal/', null=True, blank=True)
     
     # Status and Tracking
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
@@ -92,88 +96,22 @@ class CustomOrder(models.Model):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
-
-
-class CustomerMeasurement(models.Model):
-    custom_order = models.OneToOneField(
-        CustomOrder, 
-        on_delete=models.CASCADE, 
-        related_name='measurements'
-    )
     
-    # Body measurements (in inches)
-    bust_chest = models.DecimalField(
-        max_digits=5, 
-        decimal_places=2, 
-        validators=[MinValueValidator(10), MaxValueValidator(100)],
-        help_text="Bust/Chest measurement in inches"
-    )
-    waist = models.DecimalField(
-        max_digits=5, 
-        decimal_places=2,
-        validators=[MinValueValidator(10), MaxValueValidator(100)],
-        help_text="Waist measurement in inches"
-    )
-    hips = models.DecimalField(
-        max_digits=5, 
-        decimal_places=2,
-        validators=[MinValueValidator(10), MaxValueValidator(100)],
-        help_text="Hips measurement in inches"
-    )
-    height = models.DecimalField(
-        max_digits=5, 
-        decimal_places=2,
-        validators=[MinValueValidator(36), MaxValueValidator(84)],
-        help_text="Height in inches"
-    )
-    inseam = models.DecimalField(
-        max_digits=5, 
-        decimal_places=2,
-        validators=[MinValueValidator(10), MaxValueValidator(50)],
-        help_text="Inseam measurement in inches"
-    )
-    neck = models.DecimalField(
-        max_digits=5, 
-        decimal_places=2,
-        validators=[MinValueValidator(8), MaxValueValidator(25)],
-        help_text="Neck measurement in inches"
-    )
-    arms = models.DecimalField(
-        max_digits=5, 
-        decimal_places=2,
-        validators=[MinValueValidator(10), MaxValueValidator(40)],
-        help_text="Arm length in inches"
-    )
-    shoulders = models.DecimalField(
-        max_digits=5, 
-        decimal_places=2,
-        validators=[MinValueValidator(10), MaxValueValidator(30)],
-        help_text="Shoulder width in inches"
-    )
-    
+
+class CustomOrderCart(models.Model):
+    identity_code = models.CharField(max_length=50, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        verbose_name = 'Customer Measurement'
-        verbose_name_plural = 'Customer Measurements'
-    
+
     def __str__(self):
-        return f"Measurements for {self.custom_order.full_name}"
+        return f"Cart {self.id} - Identity Code: {self.identity_code}"
+    
 
-
-class CustomOrderNote(models.Model):
-    custom_order = models.ForeignKey(
-        CustomOrder, 
-        on_delete=models.CASCADE, 
-        related_name='notes'
-    )
-    note = models.TextField()
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+class CustomOrderCartItem(models.Model):
+    cart = models.ForeignKey(CustomOrderCart, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(CustomOrder, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        ordering = ['-created_at']
-    
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
-        return f"Note for {self.custom_order.full_name} by {self.created_by.username}"
+        return f"Cart Item {self.id} - Product: {self.product.first_name}"

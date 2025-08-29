@@ -112,7 +112,7 @@ const Navigation: React.FC = () => {
             </Link>
 
             {/* Cart Items */}
-            <Link to="/cartpage">
+            <Link to="/custom-cart">
               <div className="px-4 py-2 flex justify-between text-gray-700">
                 <span>Custom Cart</span>
                 <span className="font-bold text-yellow-600">8</span>
