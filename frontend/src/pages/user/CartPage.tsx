@@ -43,6 +43,33 @@ const CartPage: React.FC = () => {
     },
   });
 
+  const { mutate: deleteCartItem, isPending: isDeleting } = useMutation({
+    mutationFn: async ({
+      productId,
+      cart_code,
+    }: {
+      productId: number;
+      cart_code: string;
+    }) => {
+      const response = await api.delete(`/cart-items/`, {
+        data: {
+          productId,
+          cart_code,
+        },
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Item removed from cart ");
+      queryClient.invalidateQueries({
+        queryKey: ["cart_items", cart_code],
+      });
+    },
+    onError: () => {
+      toast.error("Failed to remove item");
+    },
+  });
+
   // NOW handle loading and error states after all hooks
   if (isLoading) {
     return (
@@ -77,7 +104,7 @@ const CartPage: React.FC = () => {
   const itemCount = cartItems.length;
 
   return (
-    <div className="w-full h-auto min-h-screen">
+    <div className="w-full h-auto ">
       {/* Hero Section */}
       <div className="relative bg-gradient-to-br from-black via-gray-900 to-black">
         <div className="absolute inset-0">
@@ -101,7 +128,7 @@ const CartPage: React.FC = () => {
       </div>
 
       {/* Cart Content */}
-      <div className="py-10 px-4 sm:px-5 md:px-15 lg:px-25 bg-gray-100 min-h-screen">
+      <div className="py-10 px-4 sm:px-5 md:px-15 lg:px-25 bg-gray-100 h-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4 text-black/90">
             <Link
@@ -239,8 +266,13 @@ const CartPage: React.FC = () => {
                           </td>
                           <td className="py-6 px-6 text-center">
                             <button
-                              // onClick={() => removeItem(item.id)}
-                              disabled={isUpdating}
+                              onClick={() =>
+                                deleteCartItem({
+                                  productId: item.id,
+                                  cart_code,
+                                })
+                              }
+                              disabled={isDeleting}
                               className="text-red-500 hover:text-red-700 transition-colors p-2 hover:bg-red-50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                               <X size={20} />
@@ -287,8 +319,13 @@ const CartPage: React.FC = () => {
                                       </p>
                                     </div>
                                     <button
-                                      // onClick={() => removeItem(item.id)}
-                                      disabled={isUpdating}
+                                      onClick={() =>
+                                        deleteCartItem({
+                                          productId: item.id,
+                                          cart_code,
+                                        })
+                                      }
+                                      disabled={isDeleting}
                                       className="text-red-500 hover:text-red-700 transition-colors p-1 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                       <X size={20} />

@@ -215,8 +215,8 @@ class CartItemsView(APIView):
             return Response({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request, *args, **kwargs):
-        item_id = request.query_params.get('item_id')
-        cart_code = request.query_params.get('cart_code')
+        item_id = request.data.get('productId')
+        cart_code = request.data.get('cart_code')
         if not item_id or not cart_code:
             return Response({'error': 'Item ID and cart code are required'}, status=status.HTTP_400_BAD_REQUEST)
 
