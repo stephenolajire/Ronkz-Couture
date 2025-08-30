@@ -151,7 +151,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:9000",
-    "https://ronkz-couture.vercel.app"
+    # "https://ronkz-couture.vercel.app"
+    "https://ronkz-couture-1.onrender.com",
 ]
 
 
@@ -228,7 +229,7 @@ cloudinary.config(
     api_key=CLOUDINARY_STORAGE["API_KEY"],
     api_secret=CLOUDINARY_STORAGE["API_SECRET"],
     secure = True,
-    api_proxy="https://api.cloudinary.com",
+    api_proxy=None
 )
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
