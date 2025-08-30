@@ -7,6 +7,7 @@ const Portfolio: React.FC = () => {
 
   const { useCategory } = useStore();
   const { data: portfolioItems, error, isLoading } = useCategory();
+  console.log(portfolioItems)
 
   if (isLoading) {
     return (

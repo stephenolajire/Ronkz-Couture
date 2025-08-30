@@ -219,13 +219,16 @@ LOGGING = {
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': config('CLOUD_NAME'),
     'API_KEY': config('API_KEY'),
-    'API_SECRET': config('API_SECRET')
+    'API_SECRET': config('API_SECRET'),
+    'SECURE':True
 }
 
 cloudinary.config(
     cloud_name=CLOUDINARY_STORAGE["CLOUD_NAME"],
     api_key=CLOUDINARY_STORAGE["API_KEY"],
     api_secret=CLOUDINARY_STORAGE["API_SECRET"],
+    secure = True,
+    api_proxy="https://api.cloudinary.com",
 )
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
