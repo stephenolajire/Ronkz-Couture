@@ -4,12 +4,14 @@ import { BsExclamation } from "react-icons/bs";
 import { useParams } from "react-router-dom";
 import { useStore } from "../../context/GlobalContext";
 import Rating from "../../component/shop/Rating";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../hook/api";
 // import { showToast } from "../../utils/toast";
 import { toast} from "react-toastify";
 
 const ProductDetails: React.FC = () => {
+
+  const queryClient = useQueryClient();
 
   var cart_code = localStorage.getItem("cart_code") || "";
 
@@ -47,6 +49,9 @@ const ProductDetails: React.FC = () => {
     },
     onSuccess: () => {
       toast.success("Product added to cart successfully!");
+      queryClient.invalidateQueries({
+        queryKey: ["cart_items", cart_code],
+      });
     },
     onError: () => {
       toast.error("Failed to add product to cart.");
