@@ -7,11 +7,11 @@ urlpatterns = [
     path('products', ProductListView.as_view(), name='product-list'),  
     path('product/<int:pk>', ProductDetailView.as_view(), name='product-detail'),
 
-     # Custom Order CRUD
+     # Custom Order
     path('custom-orders/', CustomOrderSubmissionView.as_view(), name='custom-order-create'),
-    # path('custom-orders/list/', CustomOrderListView.as_view(), name='custom-order-list'),
-    # path('custom-orders/stats/', CustomOrderStatsView.as_view(), name='custom-order-stats'),
-    # path('custom-orders/<uuid:order_id>/', CustomOrderDetailView.as_view(), name='custom-order-detail'),
-    # path('custom-orders/<uuid:order_id>/status/', CustomOrderStatusUpdateView.as_view(), name='custom-order-status-update'),
-    # path('custom-orders/<uuid:order_id>/notes/', CustomOrderNoteView.as_view(), name='custom-order-note'),
+    path('custom-order-list/', CustomOrderListView.as_view(), name='custom-order-list'),
+
+    # AddToCartView
+    path('add-to-cart/', AddToCartView.as_view(), name='add-to-cart'),
+    path('cart-items/', CartItemsView.as_view(), name='cart-items')
 ]   

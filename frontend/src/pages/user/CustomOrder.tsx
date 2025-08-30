@@ -1,10 +1,14 @@
 import React from "react";
 import { useFormik } from "formik";
 import CustomValidationSchema from "./CustomValidationSchema";
-import { useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import api from "../../hook/api";
 
 const CustomOrder: React.FC = () => {
+
+  const queryClient = useQueryClient();
+
+  const identity_code = localStorage.getItem("custom_identity") || "";
 
   const generateIdentityCode = () => {
     const timestamp = Date.now();
@@ -50,6 +54,9 @@ const CustomOrder: React.FC = () => {
       });
       return response.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["custom_order", identity_code] });
+    }
   });
 
   const formik = useFormik<FormValues>({
@@ -200,14 +207,14 @@ const CustomOrder: React.FC = () => {
               Create a{" "}
               <span className="text-yellow-400 font-medium relative">
                 one-of-a-kind piece
-                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-yellow-400 to-transparent"></div>
+                {/* <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-yellow-400 to-transparent"></div> */}
               </span>{" "}
               tailored perfectly to your measurements, style, and{" "}
               <br className="hidden sm:block" />
               vision. Let's bring your{" "}
               <span className="text-yellow-400 font-medium relative">
                 dream garment
-                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-yellow-400 to-transparent"></div>
+                {/* <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-yellow-400 to-transparent"></div> */}
               </span>{" "}
               to life.
             </p>

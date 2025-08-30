@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.shortcuts import render
 from .serializers import*
 from rest_framework.views import APIView
@@ -14,6 +15,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 import logging
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum, F
 
 
 # Create your views here.
@@ -123,6 +125,127 @@ class CustomOrderSubmissionView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-def generate_custom_order_identity_code():
-    identity = uuid.uuid4().hex[:8].upper()
-    return identity
+class CustomOrderListView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        identity_code = request.query_params.get('identity_code')
+        if not identity_code:
+            return Response({'error': 'Custom identity code is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            cart = CustomOrderCart.objects.get(identity_code=identity_code)
+            cart_items = CustomOrderCartItem.objects.filter(cart=cart)
+            serializer = CustomOrderCartItemSerializer(cart_items, many=True, context={'request': request})
+            return Response({
+                'identity_code': cart.identity_code,
+                'items': serializer.data
+            }, status=status.HTTP_200_OK)
+        except CustomOrderCart.DoesNotExist:
+            return Response({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+
+    def delete(self, request, *args, **kwargs):
+        product_code = request.query_params.get('product_code')
+        identity_code = request.query_params.get('identity_code')
+        if not product_code or not identity_code:
+            return Response({'error': 'Product code and identity code are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            cart = CustomOrderCart.objects.get(identity_code=identity_code)
+            cart_items = CustomOrderCartItem.objects.filter(cart=cart)
+            item_to_delete = cart_items.filter(product__id=product_code).first()
+            if item_to_delete:
+                item_to_delete.delete()
+                return Response({'message': 'Item removed from cart successfully'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'error': 'Item not found in cart'}, status=status.HTTP_404_NOT_FOUND)
+        except CustomOrderCart.DoesNotExist:
+            return Response({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+
+class AddToCartView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request, *args, **kwargs):
+        try:
+            cart_code = request.data.get('cart_code')
+            product_id = request.data.get('productId')
+            quantity = request.data.get('quantity', 1)
+
+            cart, _ = Cart.objects.get_or_create(cart_code=cart_code)
+            product = get_object_or_404(Product, id=product_id)
+
+            cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+            if not created:
+                cart_item.quantity += quantity
+            else:
+                cart_item.quantity = quantity
+            cart_item.save()
+
+            return Response({
+                'message': 'Product added to cart successfully',
+                'cart_code': cart.cart_code,
+                'item_id': cart_item.id,
+                'quantity': cart_item.quantity
+            }, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CartItemsView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        cart_code = request.query_params.get('cart_code')
+        if not cart_code:
+            return Response({'error': 'Cart code is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            cart = Cart.objects.get(cart_code=cart_code)
+            cart_items = CartItem.objects.filter(cart=cart)
+            total_price = cart_items.aggregate(
+                total=Sum(F('product__price') * F('quantity'))
+            )['total'] or Decimal('0.00')
+            serializer = CartItemSerializer(cart_items, many=True, context={'request': request})
+            return Response({
+                'cart_code': cart.cart_code,
+                'items': serializer.data,
+                'total_price': total_price
+            }, status=status.HTTP_200_OK)
+        except Cart.DoesNotExist:
+            return Response({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, *args, **kwargs):
+        item_id = request.query_params.get('item_id')
+        cart_code = request.query_params.get('cart_code')
+        if not item_id or not cart_code:
+            return Response({'error': 'Item ID and cart code are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            cart = Cart.objects.get(cart_code=cart_code)
+            cart_item = CartItem.objects.filter(cart=cart, id=item_id).first()
+            if cart_item:
+                cart_item.delete()
+                return Response({'message': 'Item removed from cart successfully'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'error': 'Item not found in cart'}, status=status.HTTP_404_NOT_FOUND)
+        except Cart.DoesNotExist:
+            return Response({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+    def patch(self, request, *args, **kwargs):
+        item_id = request.data.get('itemId')
+        cart_code = request.data.get('cart_code')
+        quantity = request.data.get('quantity')
+
+        if not item_id or not cart_code:
+            return Response({'error': 'Item ID and cart code are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            cart = Cart.objects.get(cart_code=cart_code)
+            cart_item = CartItem.objects.filter(cart=cart, id=item_id).first()
+            if cart_item:
+                cart_item.quantity = quantity
+                cart_item.save()
+                return Response({'message': 'Cart item updated successfully'}, status=status.HTTP_200_OK)
+            return Response({'error': 'Item not found in cart'}, status=status.HTTP_404_NOT_FOUND)
+        except Cart.DoesNotExist:
+            return Response({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)

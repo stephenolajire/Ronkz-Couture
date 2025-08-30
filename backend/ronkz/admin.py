@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, CustomOrder, CustomOrderCart, CustomOrderCartItem
+from .models import *
 
 
 @admin.register(Category)
@@ -100,3 +100,13 @@ class CustomOrderCartItemAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         # Optimize queries by selecting related cart and product
         return super().get_queryset(request).select_related('cart', 'product')
+    
+
+admin.site.site_header = "Ronkz Couture Admin"
+
+admin.site.site_title = "Ronkz Couture Admin Portal"
+
+admin.site.index_title = "Welcome to Ronkz Couture Admin"
+
+admin.site.register(CartItem)
+admin.site.register(Cart)

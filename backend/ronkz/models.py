@@ -115,3 +115,23 @@ class CustomOrderCartItem(models.Model):
 
     def __str__(self):
         return f"Cart Item {self.id} - Product: {self.product.first_name}"
+    
+
+class Cart(models.Model):
+    cart_code = models.CharField(max_length=50, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Cart {self.id} - Cart Code: {self.cart_code}"
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Cart Item {self.id} - Product: {self.product.name}"

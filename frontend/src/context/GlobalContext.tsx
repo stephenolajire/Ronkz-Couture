@@ -1,13 +1,16 @@
 // StoreContext.tsx
 import { createContext, useContext, useState, type ReactNode } from "react";
 import api from "../hook/api";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {jwtDecode} from "jwt-decode"
 
 export const QUERY_KEYS = {
   CATEGORIES: "categories",
   PRODUCTS: "products",
   PRODUCT_DETAIL: "product_detail",
+  CUSTOM_ORDER: "custom_order",
+  DELETE_CUSTOM_ORDER: "delete_custom_order",
+  CART_ITEMS: "cart_items",
 } as const;
 
 interface ProductFilters {
@@ -18,6 +21,7 @@ interface ProductFilters {
   maxPrice?: number;
 }
 
+
 interface StoreContextType {
   api: typeof api;
   useCategory: () => any;
@@ -25,6 +29,9 @@ interface StoreContextType {
   useProductDetail: (productId: string) => any;
   checkAuth: () => void;
   isAuthenticated: boolean;
+  useCustomOrder: (identity_code: string) => any;
+  useDeleteCustomOrder: (identity_code: string, product_code: string) => any;
+  useCartItems: (cart_code: string) => any;
 
   categories: any[];
   productLists: any[];
@@ -55,6 +62,8 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   // Filter state management
   const [productFilters, setProductFilters] = useState<ProductFilters>({});
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  const queryClient = useQueryClient();
 
   const updateProductFilter = (
     key: keyof ProductFilters,
@@ -95,11 +104,6 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
         const response = await api.get("categories");
         return response.data;
       },
-      staleTime: 30 * 60 * 1000,
-      gcTime: 60 * 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
     });
   };
 
@@ -136,8 +140,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
         const response = await api.get(url);
         return response.data;
       },
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes
+      enabled: !!productFilters
     });
   };
 
@@ -155,6 +158,47 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const useCustomOrder = (identity_code:string) => {
+    return useQuery({
+      queryKey: [QUERY_KEYS.CUSTOM_ORDER, identity_code],
+      queryFn: async () => {
+        const response = await api.get(`custom-order-list/?identity_code=${identity_code}`);
+        return response.data;
+      },
+      enabled: !!identity_code,
+    });
+  };
+
+const useDeleteCustomOrder = (identity_code: string) => {
+  return useMutation({
+    mutationKey: [QUERY_KEYS.DELETE_CUSTOM_ORDER, identity_code],
+    mutationFn: async (product_code: string) => {
+      const response = await api.delete(
+        `custom-order-list/?identity_code=${identity_code}&product_code=${product_code}`
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.CUSTOM_ORDER, identity_code],
+      });
+    },
+  });
+};
+
+
+const useCartItems = (cart_code: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.CART_ITEMS, cart_code],
+    queryFn: async () => {
+      const response = await api.get(`cart-items/?cart_code=${cart_code}`);
+      return response.data;
+    },
+    enabled: !!cart_code,
+  });
+};
+
+
   const value: StoreContextType = {
     api,
     useCategory,
@@ -168,6 +212,9 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     productLists,
     checkAuth,
     isAuthenticated,
+    useCustomOrder,
+    useDeleteCustomOrder,
+    useCartItems,
   };
 
   return (

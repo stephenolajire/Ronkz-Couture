@@ -1,20 +1,65 @@
-import React, { useState } from "react";
+import React from "react";
 import { BsExclamation } from "react-icons/bs";
-import BuyCustomConfirmation from "../../component/shop/BuyCustomConfirmation";
+// import BuyCustomConfirmation from "../../component/shop/BuyCustomConfirmation";
 import { useParams } from "react-router-dom";
 import { useStore } from "../../context/GlobalContext";
 import Rating from "../../component/shop/Rating";
+import { useMutation } from "@tanstack/react-query";
+import api from "../../hook/api";
+// import { showToast } from "../../utils/toast";
+import { toast} from "react-toastify";
 
 const ProductDetails: React.FC = () => {
-  const [openConfirmation, setOpenConfirmation] = useState<boolean>(false);
+
+  var cart_code = localStorage.getItem("cart_code") || "";
+
+  const generateIdentityCode = () => {
+    const timestamp = Date.now();
+    const randomNum = Math.floor(Math.random() * 10000);
+    return `cart_${timestamp}_${randomNum}`;
+  };
+
+  if (!cart_code) {
+    const newCartCode = generateIdentityCode();
+    localStorage.setItem("cart_code", newCartCode);
+    cart_code = newCartCode;
+  }
 
   const { id } = useParams<{ id: string }>();
   const { useProductDetail } = useStore();
+
+  const { mutate: addToCart, isPending: addingToCart } = useMutation({
+    mutationFn: async ({
+      productId,
+      cart_code,
+      quantity,
+    }: {
+      productId: string;
+      cart_code: string;
+      quantity: number;
+    }) => {
+      const response = await api.post("add-to-cart/", {
+        productId,
+        cart_code,
+        quantity,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Product added to cart successfully!");
+    },
+    onError: () => {
+      toast.error("Failed to add product to cart.");
+    },
+  });
+
+
 
   // Early return if no id
   if (!id) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen px-4">
+        
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             Invalid Product ID
@@ -34,10 +79,6 @@ const ProductDetails: React.FC = () => {
   }
 
   const { data: product, isLoading, error } = useProductDetail(id);
-
-  const toggleConfirmation = () => {
-    setOpenConfirmation(!openConfirmation);
-  };
 
   if (isLoading) {
     return (
@@ -152,24 +193,28 @@ const ProductDetails: React.FC = () => {
 
           <div className="flex justify-between items-center w-full gap-4">
             <button
-              className="bg-yellow-500 hover:bg-yellow-600 p-3 flex-1 text-center text-gray-50 rounded-xl transition-colors duration-200"
+              onClick={() =>
+                addToCart({ productId: product.id, cart_code, quantity: 1 })
+              }
+              className="bg-amber-500 hover:bg-yellow-600 p-3 flex-1 text-center text-gray-50 rounded-xl transition-colors duration-200"
               aria-label="Add product to cart"
+              disabled={addingToCart}
             >
-              Add to Cart
+              {addingToCart ? "Adding..." : "Add to Cart"}
             </button>
 
-            <button
+            {/* <button
               onClick={toggleConfirmation}
               className="bg-gray-500 hover:bg-gray-600 p-3 flex-1 text-center text-gray-50 rounded-xl transition-colors duration-200"
               aria-label="Create custom order"
             >
               Custom Order
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
 
-      {openConfirmation && <BuyCustomConfirmation close={toggleConfirmation} />}
+      {/* {openConfirmation && <BuyCustomConfirmation close={toggleConfirmation} />} */}
 
       <div>
         <Rating />

@@ -18,15 +18,20 @@ import ScrollToTop from "./pages/user/ScrollToTop";
 import VerifyEmail from "./auth/VerifyEmail";
 import ForgotPassword from "./auth/ForgotPassword";
 import CustomCart from "./pages/user/CustomCartPage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes
-      retry: 3,
+      staleTime: 10 * 60 * 1000, // 10 minutes default
+      gcTime: 15 * 60 * 1000, // 15 minutes garbage collection
+      retry: 2,
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      refetchOnReconnect: true,
+    },
+    mutations: {
+      retry: 1,
     },
   },
 });
@@ -37,6 +42,17 @@ const App: React.FC = () => {
       <StoreProvider>
         <Router>
           <ScrollToTop />
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
           <Routes>
             <Route path="/" element={<UserLayout />}>
               <Route index element={<Home />} />

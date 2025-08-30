@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Menu, ShoppingCart, X } from "lucide-react";
 import { useStore } from "../../context/GlobalContext";
@@ -14,7 +14,28 @@ const Navigation: React.FC = () => {
     window.location.reload();
   };
 
- const { isAuthenticated, checkAuth } = useStore();
+  const identity_code = localStorage.getItem("custom_identity") || "";
+  const cart_code = localStorage.getItem("cart_code") || "";
+
+ const { isAuthenticated, checkAuth, useCustomOrder, useCartItems } = useStore();
+
+ const {data} = useCustomOrder(identity_code);
+ const { data: cartData } = useCartItems(cart_code);
+
+  const orderCount = useMemo(() => {
+     return data?.items.length || 0;
+  }, [data]);
+
+   const cartCount = useMemo(() => {
+     return cartData?.items.length || 0;
+  }, [cartData]);
+
+  // console.log("Order Count:", orderCount);
+  // console.log("Cart Count:", cartCount);
+
+  var totalCount = useMemo(() => {
+    return orderCount + cartCount;
+  }, [orderCount, cartCount]);
 
   React.useEffect(() => {
     checkAuth();
@@ -90,8 +111,8 @@ const Navigation: React.FC = () => {
       >
         {/* Cart Icon */}
         <div className="relative cursor-pointer p-2">
-          <div className="bg-yellow-500 text-white absolute h-4 w-4 text-center rounded-full text-[10px] flex items-center justify-center font-bold right-1 top-1">
-            3
+          <div className="bg-amber-500 text-white absolute h-4 w-4 text-center rounded-full text-[10px] flex items-center justify-center font-bold right-1 top-1">
+            {totalCount}
           </div>
           <ShoppingCart className="text-base md:text-2xl text-gray-900 h-7" />
         </div>
@@ -107,29 +128,29 @@ const Navigation: React.FC = () => {
             <Link to="/cartpage">
               <div className="px-4 py-2 flex justify-between text-gray-700">
                 <span>Cart Items</span>
-                <span className="font-bold text-yellow-600">3</span>
+                <span className="font-bold text-yellow-600">{cartCount}</span>
               </div>
             </Link>
 
             {/* Cart Items */}
             <Link to="/custom-cart">
               <div className="px-4 py-2 flex justify-between text-gray-700">
-                <span>Custom Cart</span>
-                <span className="font-bold text-yellow-600">8</span>
+                <span>Custom Items</span>
+                <span className="font-bold text-yellow-600">{orderCount}</span>
               </div>
             </Link>
 
             {/* Custom Orders */}
-            <div className="px-4 py-2 flex justify-between text-gray-700">
+            {/* <div className="px-4 py-2 flex justify-between text-gray-700">
               <span>Custom Orders</span>
               <span className="font-bold text-yellow-600">2</span>
-            </div>
+            </div> */}
 
             {/* Orders */}
-            <div className="px-4 py-2 flex justify-between text-gray-700 border-t">
+            {/* <div className="px-4 py-2 flex justify-between text-gray-700 border-t">
               <span>Total Orders</span>
               <span className="font-bold text-yellow-600">5</span>
-            </div>
+            </div> */}
           </div>
         )}
       </div>

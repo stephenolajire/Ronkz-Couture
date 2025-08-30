@@ -37,10 +37,22 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class CustomOrderSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+    picture_url = serializers.SerializerMethodField()
+    status = serializers.CharField(source='get_status_display', read_only=True)
     class Meta:
         model = CustomOrder
-        fields = '__all__'
+        fields = ['id', 'image_url', 'picture_url', 'created_at', 'updated_at', 'status', 'first_name', 'last_name', 'email', 'whatsapp','styleDescription', 'occasion', 'budget', 'timeline', 'neck', 'arms', 'shoulders', 'chest', 'waist', 'hips', 'inseam', 'height']
 
+    def get_image_url(self, obj):
+        if obj.image:
+            return self.context['request'].build_absolute_uri(obj.image.url)
+        return None
+
+    def get_picture_url(self, obj):
+        if obj.picture:
+            return self.context['request'].build_absolute_uri(obj.picture.url)
+        return None
 
 class CustomOrderSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -162,3 +174,22 @@ class CustomOrderSubmissionSerializer(serializers.ModelSerializer):
         custom_order = CustomOrder.objects.create(**validated_data)
         return custom_order
     
+
+class CustomOrderCartItemSerializer(serializers.ModelSerializer):
+    product = CustomOrderSerializer(read_only=True)
+
+    class Meta:
+        model = CustomOrderCartItem
+        fields = ['id', 'product', 'created_at', 'updated_at']
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True)
+    subtotal = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CartItem
+        fields = ['id', 'cart', 'product', 'quantity', 'created_at', 'updated_at', 'subtotal']
+
+    def get_subtotal(self, obj):
+        return obj.product.price * obj.quantity
