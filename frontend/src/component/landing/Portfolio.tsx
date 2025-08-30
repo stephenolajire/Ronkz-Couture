@@ -7,7 +7,7 @@ const Portfolio: React.FC = () => {
 
   const { useCategory } = useStore();
   const { data: portfolioItems, error, isLoading } = useCategory();
-  console.log(portfolioItems)
+  // console.log(portfolioItems)
 
   if (isLoading) {
     return (
@@ -67,9 +67,7 @@ const Portfolio: React.FC = () => {
               {hoveredTitle === item.name && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/50">
                   <Link
-                    to={`/categories/${item.slug
-                      ?.toLowerCase()
-                      .replace(/\s+/g, "-")}`}
+                    to="/shop"
                     className="bg-yellow-500 text-white text-lg md:text-xl px-4 py-2 rounded-2xl hover:bg-yellow-600 transition-colors"
                   >
                     <span className="text-white text-lg font-semibold">

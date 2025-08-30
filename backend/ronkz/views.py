@@ -22,7 +22,7 @@ from django.db.models import Sum, F
 class CategoryListView(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
-        categories = Category.objects.all()
+        categories = Category.objects.all()[:4]
         serializer = CategorySerializer(categories, many=True, context={'request': request})
         return Response(serializer.data)
     
